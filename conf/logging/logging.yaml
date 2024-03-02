@@ -1,0 +1,47 @@
+version: 1
+formatters:
+  generic:
+    datefmt: '%Y-%m-%d %H:%M:%S'
+    format: '%(asctime)s %(levelname)-8s %(name)-18s %(message)s'
+handlers:
+  auth:
+    backupCount: 3
+    class: logging.handlers.RotatingFileHandler
+    filename: C:\Users\saltib\bilgi\dokumanlar\programs\dev\ericsson_poc\log\auth.log
+    formatter: generic
+    maxBytes: 1000
+  console:
+    class: logging.StreamHandler
+    formatter: generic
+    stream: ext://sys.stdout
+  main:
+    backupCount: 3
+    class: logging.handlers.RotatingFileHandler
+    filename: C:\Users\saltib\bilgi\dokumanlar\programs\dev\ericsson_poc\log\main.log
+    formatter: generic
+    maxBytes: 1000
+loggers:
+  __main__:
+    handlers:
+    - main
+    - console
+    level: DEBUG
+    propagate: false
+  main:
+    handlers:
+    - main
+    - console
+    level: DEBUG
+    propagate: false
+  module.papi.auth:
+    handlers:
+    - auth
+    - console
+    level: DEBUG
+    propagate: false
+root:
+  handlers:
+  - main
+  - console
+  level: DEBUG
+    
