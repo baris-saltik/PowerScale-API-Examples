@@ -3,5 +3,4 @@ venv/
 sil.py
 sil*.py
 pat-file
-*.crt
-/conf/ca_certificates/
+FileOrbisTrustServices.crt
