@@ -3,4 +3,5 @@ venv/
 sil.py
 sil*.py
 pat-file
+*.log
 FileOrbisTrustServices.crt
