@@ -4,4 +4,5 @@ sil.py
 sil*.py
 pat-file
 *.log
+*.log.*
 FileOrbisTrustServices.crt
