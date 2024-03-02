@@ -1,9 +1,0 @@
-2024-03-02 16:15:59 DEBUG    module.papi.auth Hello from auth from main!
-2024-03-02 16:16:12 DEBUG    module.papi.auth Hello from auth from main!
-2024-03-02 16:18:03 DEBUG    module.papi.auth   Hello from auth from main!
-2024-03-02 16:42:58 INFO     module.papi.auth   TEST Auth!
-2024-03-02 16:43:27 INFO     module.papi.auth   TEST Auth!
-2024-03-02 16:43:41 INFO     module.papi.auth   TEST Auth!
-2024-03-02 16:48:31 INFO     module.papi.auth   Logging test module.papi.auth
-2024-03-02 21:37:15 INFO     module.papi.auth   Logging test module.papi.auth
-2024-03-02 21:37:53 INFO     module.papi.auth   Logging test module.papi.auth
