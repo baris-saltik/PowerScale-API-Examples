@@ -2,8 +2,6 @@ import logging.config
 from module.logconf.logconf import get_log_config
 from module.papi.auth import Auth
 
-
-
 if __name__ == "__main__":
     # Initaite logging.
     logging.config.dictConfig(get_log_config())

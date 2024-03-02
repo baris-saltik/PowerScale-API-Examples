@@ -4,4 +4,4 @@ sil.py
 sil*.py
 pat-file
 *.crt
-ca_certificates/
+/conf/ca_certificates/
