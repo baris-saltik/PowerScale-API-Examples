@@ -14,8 +14,6 @@ class Auth(object):
 
     def __init__(self, username, password, baseUrl, ca_cert_file_name = "FileOrbisTrustServices.crt"):
 
-        logger.info(f"Authenticating the user {username}...")
-
         self.auhtenticated = False
         self.username = username
         self.password = password
@@ -56,22 +54,25 @@ class Auth(object):
     def get_session_info(self):
         try:
             response = self.session.get(url=self.sessionUrl, cookies=self.cookies, headers=self.headers)
-            # return(response.headers)
+            response.raise_for_status()
+            logger.info(f"Session information for {self.isisessid}: {json.loads(response.content)}")
         except Exception as e:
-            logger.error(f"Sessoin info could not be acquired for session id: f{self.isisessid}")
+            logger.error(f"Session info could not be acquired for session id: f{self.isisessid}")
             logger.error(e)
-            return False
+            return (False, False)
 
         return(json.loads(response.content), response.status_code)
-
+    
     def delete_session(self):
         try:
             response = self.session.delete(url=self.sessionUrl, cookies=self.cookies, headers=self.headers)
             response.raise_for_status()
-            logger.info(f"Sessoin was deleted for session id: f{self.isisessid}")
-            return(response.headers, response.status_code)
+            logger.debug(f"Session was deleted for session id: {self.isisessid}")
+            logger.debug(f"Response headers: {response.headers}")
+            logger.debug(f"Response status code: {response.status_code}")
+            return True
         except Exception as e:
-            logger.error(f"Sessoin info could not be acquired for session id: f{self.isisessid}")
+            logger.error(f"Session could not be deleted for {self.isisessid}")
             logger.error(e)
             return False
 

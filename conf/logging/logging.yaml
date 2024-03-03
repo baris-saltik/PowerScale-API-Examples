@@ -27,7 +27,7 @@ loggers:
     - console
     level: DEBUG
     propagate: false
-  powerscale_cli:
+  papi_cli:
     handlers:
     - main
     - console
