@@ -1,6 +1,7 @@
 import logging.config, sys, argparse
 from module.logconf.logconf import get_log_config
 from module.papi.auth import Auth
+from module.papi.nfs import NFS
 
 parser = argparse.ArgumentParser(description="Collective PowerScale API calls to automate defined operations",
                                epilog="Thanks for using the program!")
@@ -25,7 +26,7 @@ logger.info(f"PowerScale CLI started...")
 logger.info(f"Authenticating the user {username}...")
 
 auth = Auth(username = username, password = password, baseUrl = baseUrl)
-if not auth.auhtenticated:
+if not auth.authenticated:
     logger.error(f"Authentication failed for user: {username}, quiting!")
     sys.exit(1)
 
@@ -43,6 +44,12 @@ else:
     logger.info(f"Session info request was compeleted.")
 
 
+
+### NFS
+
+NFS(auth=auth)
+
+
 ## Delete the session
 logger.info(f"Session deletion was requested.")
 
@@ -51,6 +58,3 @@ if not auth.delete_session():
     logger.warning(f"Could not delete the session!")
 else:
     logger.info(f"Session deletion request was completed.")
-
-
-

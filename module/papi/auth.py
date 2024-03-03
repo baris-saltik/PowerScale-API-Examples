@@ -1,4 +1,4 @@
-import requests, os, sys, pathlib, json, re
+import requests, os, sys, pathlib, json
 import logging.config
 
 # Add module path to sys.path.
@@ -14,7 +14,7 @@ class Auth(object):
 
     def __init__(self, username, password, baseUrl, ca_cert_file_name = "FileOrbisTrustServices.crt"):
 
-        self.auhtenticated = False
+        self.authenticated = False
         self.username = username
         self.password = password
         self.baseUrl = baseUrl
@@ -32,7 +32,7 @@ class Auth(object):
         try:
             response = self.session.post(url=self.sessionUrl, headers=_headers, data=_data)
             response.raise_for_status()
-            self.auhtenticated = True
+            self.authenticated = True
             logger.info(f"Authentication succeeded for user: {self.username}!")
         except Exception as e:
             logger.error(f"Authentication failed for user: f{self.username}!")
@@ -46,6 +46,7 @@ class Auth(object):
         self.isisessid = response.cookies.get("isisessid")
         self.isicsrf = response.cookies.get("isicsrf")
 
+        # Create necessary cookies and headers
         self.cookies = dict(isisessid=self.isisessid)
         self.headers = {"X-CSRF-Token": self.isicsrf}
         self.referer = {'referer': self.baseUrl}

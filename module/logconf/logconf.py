@@ -43,7 +43,7 @@ def get_log_config(maxBytes = 3000, backupCount = 3, level = "INFO"):
             },
 
             "loggers": {
-                "main": {
+                "papi_cli": {
                     "level": "DEBUG",
                     "propagate": False,
                     "handlers": ["main", "console"]
@@ -60,7 +60,13 @@ def get_log_config(maxBytes = 3000, backupCount = 3, level = "INFO"):
                     "level": "DEBUG",
                     "propagate": False,
                     "handlers": ["auth", "console"]
-                }
+                },
+
+                "module.papi.nfs": {
+                    "level": "DEBUG",
+                    "propagate": False,
+                    "handlers": ["auth", "console"]
+                },
             },
 
             "root": {
