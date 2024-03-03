@@ -27,7 +27,7 @@ loggers:
     - console
     level: DEBUG
     propagate: false
-  main:
+  powerscale_cli:
     handlers:
     - main
     - console

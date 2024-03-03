@@ -13,6 +13,10 @@ logger = logging.getLogger(__name__)
 class Auth(object):
 
     def __init__(self, username, password, baseUrl, ca_cert_file_name = "FileOrbisTrustServices.crt"):
+
+        logger.info(f"Authenticating the user {username}...")
+
+        self.auhtenticated = False
         self.username = username
         self.password = password
         self.baseUrl = baseUrl
@@ -27,7 +31,16 @@ class Auth(object):
         self.session = requests.Session()
         self.session.verify = ca_cert_file_path
 
-        response = self.session.post(url=self.sessionUrl, headers=_headers, data=_data)
+        try:
+            response = self.session.post(url=self.sessionUrl, headers=_headers, data=_data)
+            response.raise_for_status()
+            self.auhtenticated = True
+            logger.info(f"Authentication succeeded for user: {self.username}!")
+        except Exception as e:
+            logger.error(f"Authentication failed for user: f{self.username}!")
+            logger.error(e)
+            sys.exit()
+
 
         # self.sessionId = sessionIdRex.search(response.headers["Set-Cookie"]).group(1)
         # self.csrfToken = response.headers["X-CSRF-Token"]
@@ -41,13 +54,26 @@ class Auth(object):
         self.headers.update(self.referer)
 
     def get_session_info(self):
-        response = self.session.get(url=self.sessionUrl, cookies=self.cookies, headers=self.headers)
-        # return(response.headers)
+        try:
+            response = self.session.get(url=self.sessionUrl, cookies=self.cookies, headers=self.headers)
+            # return(response.headers)
+        except Exception as e:
+            logger.error(f"Sessoin info could not be acquired for session id: f{self.isisessid}")
+            logger.error(e)
+            return False
+
         return(json.loads(response.content), response.status_code)
 
     def delete_session(self):
-        response = self.session.delete(url=self.sessionUrl, cookies=self.cookies, headers=self.headers)
-        return(response.headers, response.status_code)
+        try:
+            response = self.session.delete(url=self.sessionUrl, cookies=self.cookies, headers=self.headers)
+            response.raise_for_status()
+            logger.info(f"Sessoin was deleted for session id: f{self.isisessid}")
+            return(response.headers, response.status_code)
+        except Exception as e:
+            logger.error(f"Sessoin info could not be acquired for session id: f{self.isisessid}")
+            logger.error(e)
+            return False
 
 
 if __name__ == "__main__":

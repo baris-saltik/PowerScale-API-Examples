@@ -1,6 +1,6 @@
 import os, logging.config, yaml, pathlib
 
-def get_log_config(maxBytes = 1000, backupCount = 3):
+def get_log_config(maxBytes = 3000, backupCount = 3):
         
         loggingBaseDirectory = os.path.abspath(os.path.join(pathlib.Path(__file__).resolve().parents[2],"log"))
         os.makedirs(loggingBaseDirectory, exist_ok=True)
