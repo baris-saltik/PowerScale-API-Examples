@@ -1,7 +1,9 @@
 import os, logging.config, yaml, pathlib
 
-def get_log_config(maxBytes = 3000, backupCount = 3, level = "INFO"):
+def get_log_config(maxBytes = 3000, backupCount = 3, level = "DEBUG"):
         
+        level = level.upper()
+
         loggingBaseDirectory = os.path.abspath(os.path.join(pathlib.Path(__file__).resolve().parents[2],"log"))
         os.makedirs(loggingBaseDirectory, exist_ok=True)
 
@@ -91,12 +93,13 @@ def get_log_config(maxBytes = 3000, backupCount = 3, level = "INFO"):
         else:
              configDict = defaultConfigDict  
 
-        # Set maxBytes and backupCount parameters for each log handler.
+        # Set maxBytes, backupCount and filename parameters for each log handler and level for all handlers.
         for handlerConfig in configDict["handlers"].values():
              handlerConfig["level"] = level
              if handlerConfig["class"] == "logging.handlers.RotatingFileHandler":
                   handlerConfig["maxBytes"] = maxBytes
                   handlerConfig["backupCount"] = backupCount
+                  handlerConfig["filename"] = os.path.join( loggingBaseDirectory, handlerConfig["filename"] )
 
         return configDict
 
@@ -104,7 +107,4 @@ def get_log_config(maxBytes = 3000, backupCount = 3, level = "INFO"):
 if __name__ == "__main__":
     
     logConfig = get_log_config()
-    print(type(logConfig))
-    logger = logging.config.dictConfig
-
-    # print(yaml.dump(logConfig, default_flow_style=False))
+    print(yaml.dump(logConfig, default_flow_style=False))

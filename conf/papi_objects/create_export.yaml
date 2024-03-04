@@ -1,0 +1,16 @@
+version: v1
+kind: Export
+metadata:
+spec:
+  zone: zone1
+  description: "Export 1"
+  paths: 
+    - "/ifs/data/zone1/nfs/export2"
+  clients:
+    - "0.0.0.0/0.0.0.0"
+  root_clients:
+    - "0.0.0.0/0.0.0.0"
+  security_flavors:
+    - unix
+    - krb5
+  

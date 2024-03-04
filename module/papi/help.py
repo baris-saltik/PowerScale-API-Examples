@@ -1,16 +1,10 @@
-import requests, os, sys, pathlib, json, yaml
+import os, sys, pathlib, json, yaml
 
 # Add module path to sys.path.
 modulePath = os.path.abspath(pathlib.Path(__file__).resolve().parents[2])
 sys.path.append(modulePath)
 
 from module.papi.auth import Auth
-
-username = "root"
-password = "Password77"
-baseUrl = "https://91.229.44.253:8080"
-
-
 
 class Help(object):
     def __init__(self, auth = None):
@@ -45,7 +39,7 @@ class Help(object):
                     if filter.lower() in api:
                         print(api)
 
-    def list_all_apis_for_version(self, version = 16):
+    def list_all_apis_for_a_version(self, version = 16):
         _params = dict(describe="", list="")
         _url = self.platformBaseUrl + str(version) + "/"
 
@@ -70,18 +64,20 @@ class Help(object):
             for api in value:
                 print(api)
 
-    def documentation_for_a_resource(self, reosurcePath = "protocols/nfs/exports-summary"):
-        # _params = {"describe":" ", "json":" "}
-        _url = self.platformBaseUrl + reosurcePath + "?describe&json"
+    def documentation_for_a_resource(self, apiVersion = "14", resourcePath = "protocols/nfs/exports-summary"):
+        _params = {"describe":"", "json":""}
+        _url = self.platformBaseUrl + f"{apiVersion}/" + resourcePath
         
-        # response = self.session.get(url=_url, cookies=self.cookies, headers=self.headers, params=_params)
-        response = self.session.get(url=_url, cookies=self.cookies, headers=self.headers)
+        _response = self.session.get(url=_url, cookies=self.cookies, headers=self.headers, params=_params)
+        _response.raise_for_status()
+        
+        print(yaml.dump(json.loads(_response.content.decode("utf-8")), default_flow_style=False))
 
-        response.raise_for_status()
+        # Write the content into a file.
+        # helpFilePath = os.path.abspath( os.path.join( pathlib.Path(__file__).resolve().parents[2], "help", "nfs", "exports.help" ))
+        # with open(helpFilePath, "w") as file:
+        #    file.write(yaml.dump(json.loads(_response.content.decode("utf-8")), default_flow_style=False))
 
-        print(yaml.dump(json.loads(response.content.decode("utf-8"))))
-
-        # print(response.content)
 
     def list_of_all_resources_for_a_feature(self, reosurcePath = "protocols/nfs/exports"):
         _params = dict(describe="", list="", all="")
@@ -96,14 +92,19 @@ class Help(object):
 
 if __name__ == "__main__":
 
+    username = "root"
+    password = "3"
+    # baseUrl = "https://91.229.44.253:8080" # onefs95
+    baseUrl = "https://192.168.184.141:8080" # icarus
+
     auth = Auth(username=username, password = password, baseUrl = baseUrl)
 
     helper = Help(auth=auth)
 
     # helper.list_all_apis("nfs")
-    # helper.list_all_apis_for_version(16)
+    # helper.list_all_apis_for_a_version(16)
     # helper.list_all_versions_for_a_resouce()
-    helper.documentation_for_a_resource("protocols/nfs/exports")
+    helper.documentation_for_a_resource(apiVersion = 16, resourcePath = "protocols/nfs/exports")
     # helper.list_of_all_resources_for_a_feature()
 
         

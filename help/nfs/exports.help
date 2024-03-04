@@ -1,0 +1,1595 @@
+GET_args:
+  description: List all NFS exports.
+  properties:
+    check:
+      description: Check for conflicts when listing exports.
+      type: boolean
+    dir:
+      description: The direction of the sort.
+      enum:
+      - ASC
+      - DESC
+      minLength: 0
+      type: string
+    limit:
+      description: Return no more than this many results at once (see resume).
+      maximum: 5000
+      minimum: 1
+      type: integer
+    offset:
+      description: The position of the first item returned for a paginated query within
+        the full result set.
+      maximum: 4294967295
+      minimum: 0
+      type: integer
+    path:
+      description: If specified, only exports that explicitly reference at least one
+        of the given paths will be returned.
+      type: string
+    resume:
+      description: Continue returning results from previous call using this token
+        (token should come from the previous call, resume cannot be used with other
+        options).
+      maxLength: 8192
+      minLength: 0
+      type: string
+    scope:
+      description: When specified as 'effective', or not specified, all fields are
+        returned. When specified as 'user', only fields with non-default values are
+        shown. When specified as 'default', the original values are returned.
+      enum:
+      - effective
+      - user
+      type: string
+    sort:
+      description: The field that will be used for sorting. Default is id.
+      enum:
+      - id
+      - paths
+      - description
+      maxLength: 255
+      minLength: 0
+      type: string
+    zone:
+      description: Access zone
+      type: string
+  type: object
+GET_output_schema:
+  type:
+  - additionalProperties: false
+    description: A list of errors that may be returned.
+    properties:
+      errors:
+        items:
+          additionalProperties: false
+          description: An object describing a single error.
+          properties:
+            code:
+              description: The error code.
+              maxLength: 8192
+              minLength: 1
+              type: string
+            field:
+              description: The field with the error if applicable.
+              maxLength: 8192
+              minLength: 1
+              type: string
+            message:
+              description: The error message.
+              maxLength: 8192
+              minLength: 1
+              type: string
+          type: object
+        maxItems: 65535
+        minItems: 1
+        type: array
+    type: object
+  - additionalProperties: false
+    properties:
+      digest:
+        description: An identifier for a set of exports.
+        type: string
+      exports:
+        items:
+          description: Specifies configuration values for NFS exports.
+          properties:
+            all_dirs:
+              description: True if all directories under the specified paths are mountable.
+              type: boolean
+            block_size:
+              description: Specifies the block size returned by the NFS statfs procedure.
+              maximum: 4294967295
+              minimum: 0
+              type: integer
+            can_set_time:
+              description: True if the client can set file times through the NFS set
+                attribute request. This parameter does not affect server behavior,
+                but is included to accommodate legacy client requirements.
+              type: boolean
+            case_insensitive:
+              description: True if the case is ignored for file names. This parameter
+                does not affect server behavior, but is included to accommodate legacy
+                client requirements.
+              type: boolean
+            case_preserving:
+              description: True if the case is preserved for file names. This parameter
+                does not affect server behavior, but is included to accommodate legacy
+                client requirements.
+              type: boolean
+            chown_restricted:
+              description: True if the superuser can change file ownership. This parameter
+                does not affect server behavior, but is included to accommodate legacy
+                client requirements.
+              type: boolean
+            clients:
+              description: Specifies the clients with root access to the export.
+              items:
+                type: string
+              type: array
+            commit_asynchronous:
+              description: True if NFS  commit  requests execute asynchronously.
+              type: boolean
+            conflicting_paths:
+              description: Reports the paths that conflict with another export.
+              items:
+                type: string
+              type: array
+            description:
+              description: Specifies the user-defined string that is used to identify
+                the export.
+              type: string
+            directory_transfer_size:
+              description: Specifies the preferred size for directory read operations.
+                This value is used to advise the client of optimal settings for the
+                server, but is not enforced.
+              maximum: 4294967295
+              minimum: 0
+              type: integer
+            encoding:
+              description: Specifies the default character set encoding of the clients
+                connecting to the export, unless otherwise specified.
+              type: string
+            id:
+              description: Specifies the system-assigned ID for the export. This ID
+                is returned when an export is created through the POST method.
+              type: integer
+            link_max:
+              description: Specifies the reported maximum number of links to a file.
+                This parameter does not affect server behavior, but is included to
+                accommodate legacy client requirements.
+              maximum: 4294967295
+              minimum: 0
+              type: integer
+            map_all:
+              description: Specifies the users and groups to which non-root and root
+                clients are mapped.
+              type:
+              - description: User and group mapping.
+                properties:
+                  enabled:
+                    description: True if the user mapping is applied.
+                    type: boolean
+                  primary_group:
+                    description: Specifies persona properties for the primary user
+                      group. A persona consists of either a type and name, or an ID.
+                    type:
+                    - description: Specifies properties for a persona, which consists
+                        of either a 'type' and a 'name' or an 'ID'.
+                      properties:
+                        id:
+                          description: Specifies the serialized form of a persona,
+                            which can be 'UID:0', 'USER:name', 'GID:0', 'GROUP:wheel',
+                            or 'SID:S-1-1'.
+                          maxLength: 261
+                          minLength: 0
+                          type: string
+                        name:
+                          description: Specifies the persona name, which must be combined
+                            with a type.
+                          maxLength: 255
+                          minLength: 0
+                          type:
+                          - string
+                          - 'null'
+                        type:
+                          description: Specifies the type of persona, which must be
+                            combined with a name.
+                          enum:
+                          - user
+                          - group
+                          - wellknown
+                          type:
+                          - string
+                          - 'null'
+                      type: object
+                  secondary_groups:
+                    description: Specifies persona properties for the secondary user
+                      group. A persona consists of either a type and name, or an ID.
+                    items:
+                      type:
+                      - description: Specifies properties for a persona, which consists
+                          of either a 'type' and a 'name' or an 'ID'.
+                        properties:
+                          id:
+                            description: Specifies the serialized form of a persona,
+                              which can be 'UID:0', 'USER:name', 'GID:0', 'GROUP:wheel',
+                              or 'SID:S-1-1'.
+                            maxLength: 261
+                            minLength: 0
+                            type: string
+                          name:
+                            description: Specifies the persona name, which must be
+                              combined with a type.
+                            maxLength: 255
+                            minLength: 0
+                            type:
+                            - string
+                            - 'null'
+                          type:
+                            description: Specifies the type of persona, which must
+                              be combined with a name.
+                            enum:
+                            - user
+                            - group
+                            - wellknown
+                            type:
+                            - string
+                            - 'null'
+                        type: object
+                    type: array
+                  user:
+                    description: Specifies the name of the privilege.
+                    type:
+                    - description: Specifies properties for a persona, which consists
+                        of either a 'type' and a 'name' or an 'ID'.
+                      properties:
+                        id:
+                          description: Specifies the serialized form of a persona,
+                            which can be 'UID:0', 'USER:name', 'GID:0', 'GROUP:wheel',
+                            or 'SID:S-1-1'.
+                          maxLength: 261
+                          minLength: 0
+                          type: string
+                        name:
+                          description: Specifies the persona name, which must be combined
+                            with a type.
+                          maxLength: 255
+                          minLength: 0
+                          type:
+                          - string
+                          - 'null'
+                        type:
+                          description: Specifies the type of persona, which must be
+                            combined with a name.
+                          enum:
+                          - user
+                          - group
+                          - wellknown
+                          type:
+                          - string
+                          - 'null'
+                      type: object
+                type: object
+            map_failure:
+              description: Specifies the users and groups to which clients should
+                be mapped to if authentication fails.
+              type:
+              - description: User and group mapping.
+                properties:
+                  enabled:
+                    description: True if the user mapping is applied.
+                    type: boolean
+                  primary_group:
+                    description: Specifies persona properties for the primary user
+                      group. A persona consists of either a type and name, or an ID.
+                    type:
+                    - description: Specifies properties for a persona, which consists
+                        of either a 'type' and a 'name' or an 'ID'.
+                      properties:
+                        id:
+                          description: Specifies the serialized form of a persona,
+                            which can be 'UID:0', 'USER:name', 'GID:0', 'GROUP:wheel',
+                            or 'SID:S-1-1'.
+                          maxLength: 261
+                          minLength: 0
+                          type: string
+                        name:
+                          description: Specifies the persona name, which must be combined
+                            with a type.
+                          maxLength: 255
+                          minLength: 0
+                          type:
+                          - string
+                          - 'null'
+                        type:
+                          description: Specifies the type of persona, which must be
+                            combined with a name.
+                          enum:
+                          - user
+                          - group
+                          - wellknown
+                          type:
+                          - string
+                          - 'null'
+                      type: object
+                  secondary_groups:
+                    description: Specifies persona properties for the secondary user
+                      group. A persona consists of either a type and name, or an ID.
+                    items:
+                      type:
+                      - description: Specifies properties for a persona, which consists
+                          of either a 'type' and a 'name' or an 'ID'.
+                        properties:
+                          id:
+                            description: Specifies the serialized form of a persona,
+                              which can be 'UID:0', 'USER:name', 'GID:0', 'GROUP:wheel',
+                              or 'SID:S-1-1'.
+                            maxLength: 261
+                            minLength: 0
+                            type: string
+                          name:
+                            description: Specifies the persona name, which must be
+                              combined with a type.
+                            maxLength: 255
+                            minLength: 0
+                            type:
+                            - string
+                            - 'null'
+                          type:
+                            description: Specifies the type of persona, which must
+                              be combined with a name.
+                            enum:
+                            - user
+                            - group
+                            - wellknown
+                            type:
+                            - string
+                            - 'null'
+                        type: object
+                    type: array
+                  user:
+                    description: Specifies the name of the privilege.
+                    type:
+                    - description: Specifies properties for a persona, which consists
+                        of either a 'type' and a 'name' or an 'ID'.
+                      properties:
+                        id:
+                          description: Specifies the serialized form of a persona,
+                            which can be 'UID:0', 'USER:name', 'GID:0', 'GROUP:wheel',
+                            or 'SID:S-1-1'.
+                          maxLength: 261
+                          minLength: 0
+                          type: string
+                        name:
+                          description: Specifies the persona name, which must be combined
+                            with a type.
+                          maxLength: 255
+                          minLength: 0
+                          type:
+                          - string
+                          - 'null'
+                        type:
+                          description: Specifies the type of persona, which must be
+                            combined with a name.
+                          enum:
+                          - user
+                          - group
+                          - wellknown
+                          type:
+                          - string
+                          - 'null'
+                      type: object
+                type: object
+            map_full:
+              description: True if user mappings query the OneFS user database. When
+                set to false, user mappings only query local authentication.
+              type: boolean
+            map_lookup_uid:
+              description: True if incoming user IDs (UIDs) are mapped to users in
+                the OneFS user database. When set to false, incoming UIDs are applied
+                directly to file operations.
+              type: boolean
+            map_non_root:
+              description: Specifies the users and groups to which non-root clients
+                are mapped.
+              type:
+              - description: User and group mapping.
+                properties:
+                  enabled:
+                    description: True if the user mapping is applied.
+                    type: boolean
+                  primary_group:
+                    description: Specifies persona properties for the primary user
+                      group. A persona consists of either a type and name, or an ID.
+                    type:
+                    - description: Specifies properties for a persona, which consists
+                        of either a 'type' and a 'name' or an 'ID'.
+                      properties:
+                        id:
+                          description: Specifies the serialized form of a persona,
+                            which can be 'UID:0', 'USER:name', 'GID:0', 'GROUP:wheel',
+                            or 'SID:S-1-1'.
+                          maxLength: 261
+                          minLength: 0
+                          type: string
+                        name:
+                          description: Specifies the persona name, which must be combined
+                            with a type.
+                          maxLength: 255
+                          minLength: 0
+                          type:
+                          - string
+                          - 'null'
+                        type:
+                          description: Specifies the type of persona, which must be
+                            combined with a name.
+                          enum:
+                          - user
+                          - group
+                          - wellknown
+                          type:
+                          - string
+                          - 'null'
+                      type: object
+                  secondary_groups:
+                    description: Specifies persona properties for the secondary user
+                      group. A persona consists of either a type and name, or an ID.
+                    items:
+                      type:
+                      - description: Specifies properties for a persona, which consists
+                          of either a 'type' and a 'name' or an 'ID'.
+                        properties:
+                          id:
+                            description: Specifies the serialized form of a persona,
+                              which can be 'UID:0', 'USER:name', 'GID:0', 'GROUP:wheel',
+                              or 'SID:S-1-1'.
+                            maxLength: 261
+                            minLength: 0
+                            type: string
+                          name:
+                            description: Specifies the persona name, which must be
+                              combined with a type.
+                            maxLength: 255
+                            minLength: 0
+                            type:
+                            - string
+                            - 'null'
+                          type:
+                            description: Specifies the type of persona, which must
+                              be combined with a name.
+                            enum:
+                            - user
+                            - group
+                            - wellknown
+                            type:
+                            - string
+                            - 'null'
+                        type: object
+                    type: array
+                  user:
+                    description: Specifies the name of the privilege.
+                    type:
+                    - description: Specifies properties for a persona, which consists
+                        of either a 'type' and a 'name' or an 'ID'.
+                      properties:
+                        id:
+                          description: Specifies the serialized form of a persona,
+                            which can be 'UID:0', 'USER:name', 'GID:0', 'GROUP:wheel',
+                            or 'SID:S-1-1'.
+                          maxLength: 261
+                          minLength: 0
+                          type: string
+                        name:
+                          description: Specifies the persona name, which must be combined
+                            with a type.
+                          maxLength: 255
+                          minLength: 0
+                          type:
+                          - string
+                          - 'null'
+                        type:
+                          description: Specifies the type of persona, which must be
+                            combined with a name.
+                          enum:
+                          - user
+                          - group
+                          - wellknown
+                          type:
+                          - string
+                          - 'null'
+                      type: object
+                type: object
+            map_retry:
+              description: Determines whether searches for users specified in 'map_all',
+                'map_root' or 'map_nonroot' are retried if the search fails.
+              type: boolean
+            map_root:
+              description: Specifies the users and groups to which root clients are
+                mapped.
+              type:
+              - description: User and group mapping.
+                properties:
+                  enabled:
+                    description: True if the user mapping is applied.
+                    type: boolean
+                  primary_group:
+                    description: Specifies persona properties for the primary user
+                      group. A persona consists of either a type and name, or an ID.
+                    type:
+                    - description: Specifies properties for a persona, which consists
+                        of either a 'type' and a 'name' or an 'ID'.
+                      properties:
+                        id:
+                          description: Specifies the serialized form of a persona,
+                            which can be 'UID:0', 'USER:name', 'GID:0', 'GROUP:wheel',
+                            or 'SID:S-1-1'.
+                          maxLength: 261
+                          minLength: 0
+                          type: string
+                        name:
+                          description: Specifies the persona name, which must be combined
+                            with a type.
+                          maxLength: 255
+                          minLength: 0
+                          type:
+                          - string
+                          - 'null'
+                        type:
+                          description: Specifies the type of persona, which must be
+                            combined with a name.
+                          enum:
+                          - user
+                          - group
+                          - wellknown
+                          type:
+                          - string
+                          - 'null'
+                      type: object
+                  secondary_groups:
+                    description: Specifies persona properties for the secondary user
+                      group. A persona consists of either a type and name, or an ID.
+                    items:
+                      type:
+                      - description: Specifies properties for a persona, which consists
+                          of either a 'type' and a 'name' or an 'ID'.
+                        properties:
+                          id:
+                            description: Specifies the serialized form of a persona,
+                              which can be 'UID:0', 'USER:name', 'GID:0', 'GROUP:wheel',
+                              or 'SID:S-1-1'.
+                            maxLength: 261
+                            minLength: 0
+                            type: string
+                          name:
+                            description: Specifies the persona name, which must be
+                              combined with a type.
+                            maxLength: 255
+                            minLength: 0
+                            type:
+                            - string
+                            - 'null'
+                          type:
+                            description: Specifies the type of persona, which must
+                              be combined with a name.
+                            enum:
+                            - user
+                            - group
+                            - wellknown
+                            type:
+                            - string
+                            - 'null'
+                        type: object
+                    type: array
+                  user:
+                    description: Specifies the name of the privilege.
+                    type:
+                    - description: Specifies properties for a persona, which consists
+                        of either a 'type' and a 'name' or an 'ID'.
+                      properties:
+                        id:
+                          description: Specifies the serialized form of a persona,
+                            which can be 'UID:0', 'USER:name', 'GID:0', 'GROUP:wheel',
+                            or 'SID:S-1-1'.
+                          maxLength: 261
+                          minLength: 0
+                          type: string
+                        name:
+                          description: Specifies the persona name, which must be combined
+                            with a type.
+                          maxLength: 255
+                          minLength: 0
+                          type:
+                          - string
+                          - 'null'
+                        type:
+                          description: Specifies the type of persona, which must be
+                            combined with a name.
+                          enum:
+                          - user
+                          - group
+                          - wellknown
+                          type:
+                          - string
+                          - 'null'
+                      type: object
+                type: object
+            max_file_size:
+              description: Specifies the maximum file size for any file accessed from
+                the export. This parameter does not affect server behavior, but is
+                included to accommodate legacy client requirements.
+              type: integer
+            name_max_size:
+              description: Specifies the reported maximum length of a file name. This
+                parameter does not affect server behavior, but is included to accommodate
+                legacy client requirements.
+              maximum: 4294967295
+              minimum: 0
+              type: integer
+            no_truncate:
+              description: True if long file names result in an error. This parameter
+                does not affect server behavior, but is included to accommodate legacy
+                client requirements.
+              type: boolean
+            paths:
+              description: Specifies the paths under /ifs that are exported.
+              items:
+                type: string
+              type: array
+            read_only:
+              description: True if the export is set to read-only.
+              type: boolean
+            read_only_clients:
+              description: Specifies the clients with read-only access to the export.
+              items:
+                type: string
+              type: array
+            read_transfer_max_size:
+              description: Specifies the maximum buffer size that clients should use
+                on NFS read requests. This value is used to advise the client of optimal
+                settings for the server, but is not enforced.
+              maximum: 4294967295
+              minimum: 0
+              type: integer
+            read_transfer_multiple:
+              description: Specifies the preferred multiple size for NFS read requests.
+                This value is used to advise the client of optimal settings for the
+                server, but is not enforced.
+              maximum: 4294967295
+              minimum: 0
+              type: integer
+            read_transfer_size:
+              description: Specifies the preferred size for NFS read requests. This
+                value is used to advise the client of optimal settings for the server,
+                but is not enforced.
+              maximum: 4294967295
+              minimum: 0
+              type: integer
+            read_write_clients:
+              description: Specifies the clients with both read and write access to
+                the export, even when the export is set to read-only.
+              items:
+                type: string
+              type: array
+            readdirplus:
+              description: True if 'readdirplus' requests are enabled. Enabling this
+                property might improve network performance and is only available for
+                NFSv3.
+              type: boolean
+            readdirplus_prefetch:
+              description: Sets the number of directory entries that are prefetched
+                when a 'readdirplus' request is processed. (Deprecated.)
+              maximum: 4294967295
+              minimum: 0
+              type: integer
+            return_32bit_file_ids:
+              description: Limits the size of file identifiers returned by NFSv3+
+                to 32-bit values (may require remount).
+              type: boolean
+            root_clients:
+              description: Clients that have root access to the export.
+              items:
+                type: string
+              type: array
+            security_flavors:
+              description: Specifies the authentication types that are supported for
+                this export.
+              items:
+                description: Specifies the authentication types that are supported
+                  for this export.
+                enum:
+                - unix
+                - krb5
+                - krb5i
+                - krb5p
+                type: string
+              type: array
+            setattr_asynchronous:
+              description: True if set attribute operations execute asynchronously.
+              type: boolean
+            snapshot:
+              description: Specifies the snapshot for all mounts.
+              type: string
+            symlinks:
+              description: True if symlinks are supported. This value is used to advise
+                the client of optimal settings for the server, but is not enforced.
+              type: boolean
+            time_delta:
+              description: Specifies the resolution of all time values that are returned
+                to the clients
+              type: number
+            unresolved_clients:
+              description: Reports clients that cannot be resolved.
+              items:
+                type: string
+              type: array
+            write_datasync_action:
+              description: Specifies the action to be taken when an NFSv3+ datasync
+                write is requested.
+              type:
+              - description: Specifies the synchronization type.
+                enum:
+                - DATASYNC
+                - FILESYNC
+                - UNSTABLE
+                type: string
+            write_datasync_reply:
+              description: Specifies the stability disposition returned when an NFSv3+
+                datasync write is processed.
+              type:
+              - description: Specifies the synchronization type.
+                enum:
+                - DATASYNC
+                - FILESYNC
+                - UNSTABLE
+                type: string
+            write_filesync_action:
+              description: Specifies the action to be taken when an NFSv3+ filesync
+                write is requested.
+              type:
+              - description: Specifies the synchronization type.
+                enum:
+                - DATASYNC
+                - FILESYNC
+                - UNSTABLE
+                type: string
+            write_filesync_reply:
+              description: Specifies the stability disposition returned when an NFSv3+
+                filesync write is processed.
+              type:
+              - description: Specifies the synchronization type.
+                enum:
+                - DATASYNC
+                - FILESYNC
+                - UNSTABLE
+                type: string
+            write_transfer_max_size:
+              description: Specifies the maximum buffer size that clients should use
+                on NFS write requests. This value is used to advise the client of
+                optimal settings for the server, but is not enforced.
+              maximum: 4294967295
+              minimum: 0
+              type: integer
+            write_transfer_multiple:
+              description: Specifies the preferred multiple size for NFS write requests.
+                This value is used to advise the client of optimal settings for the
+                server, but is not enforced.
+              maximum: 4294967295
+              minimum: 0
+              type: integer
+            write_transfer_size:
+              description: Specifies the preferred multiple size for NFS write requests.
+                This value is used to advise the client of optimal settings for the
+                server, but is not enforced.
+              maximum: 4294967295
+              minimum: 0
+              type: integer
+            write_unstable_action:
+              description: Specifies the action to be taken when an NFSv3+ unstable
+                write is requested.
+              type:
+              - description: Specifies the synchronization type.
+                enum:
+                - DATASYNC
+                - FILESYNC
+                - UNSTABLE
+                type: string
+            write_unstable_reply:
+              description: Specifies the stability disposition returned when an NFSv3+
+                unstable write is processed.
+              type:
+              - description: Specifies the synchronization type.
+                enum:
+                - DATASYNC
+                - FILESYNC
+                - UNSTABLE
+                type: string
+            zone:
+              description: Specifies the zone in which the export is valid.
+              type: string
+          type: object
+          x-privilege: ISI_PRIV_NFS_SETTINGS_EXPORT
+        maxItems: 18446744073709551615
+        minItems: 0
+        type: array
+        x-privilege: ISI_PRIV_NFS_EXPORTS
+      resume:
+        description: Provide this token as the 'resume' query argument to continue
+          listing results.
+        maxLength: 8192
+        minLength: 0
+        type:
+        - string
+        - 'null'
+      total:
+        description: Total number of items available.
+        maximum: 18446744073709551615
+        minimum: 0
+        type: integer
+    type: object
+POST_args:
+  description: Create a new NFS export.
+  properties:
+    force:
+      description: If true, the export will be created even if it conflicts with another
+        export.
+      type: boolean
+    ignore_bad_auth:
+      description: Ignore invalid users.
+      type: boolean
+    ignore_bad_paths:
+      description: Ignore nonexistent or otherwise bad paths.
+      type: boolean
+    ignore_conflicts:
+      description: Ignore conflicts with existing exports.
+      type: boolean
+    ignore_unresolvable_hosts:
+      description: Ignore unresolvable hosts.
+      type: boolean
+    zone:
+      description: Access zone
+      type: string
+  type: object
+POST_input_schema:
+  description: Specifies configuration values for NFS exports.
+  properties:
+    all_dirs:
+      description: True if all directories under the specified paths are mountable.
+      type: boolean
+    block_size:
+      description: Specifies the block size returned by the NFS statfs procedure.
+      maximum: 4294967295
+      minimum: 0
+      type: integer
+    can_set_time:
+      description: True if the client can set file times through the NFS set attribute
+        request. This parameter does not affect server behavior, but is included to
+        accommodate legacy client requirements.
+      type: boolean
+    case_insensitive:
+      description: True if the case is ignored for file names. This parameter does
+        not affect server behavior, but is included to accommodate legacy client requirements.
+      type: boolean
+    case_preserving:
+      description: True if the case is preserved for file names. This parameter does
+        not affect server behavior, but is included to accommodate legacy client requirements.
+      type: boolean
+    chown_restricted:
+      description: True if the superuser can change file ownership. This parameter
+        does not affect server behavior, but is included to accommodate legacy client
+        requirements.
+      type: boolean
+    clients:
+      description: Specifies the clients with root access to the export.
+      items:
+        type: string
+      type: array
+    commit_asynchronous:
+      description: True if NFS  commit  requests execute asynchronously.
+      type: boolean
+    description:
+      description: Specifies the user-defined string that is used to identify the
+        export.
+      type: string
+    directory_transfer_size:
+      description: Specifies the preferred size for directory read operations. This
+        value is used to advise the client of optimal settings for the server, but
+        is not enforced.
+      maximum: 4294967295
+      minimum: 0
+      type: integer
+    encoding:
+      description: Specifies the default character set encoding of the clients connecting
+        to the export, unless otherwise specified.
+      type: string
+    link_max:
+      description: Specifies the reported maximum number of links to a file. This
+        parameter does not affect server behavior, but is included to accommodate
+        legacy client requirements.
+      maximum: 4294967295
+      minimum: 0
+      type: integer
+    map_all:
+      description: Specifies the users and groups to which non-root and root clients
+        are mapped.
+      type:
+      - description: User and group mapping.
+        properties:
+          enabled:
+            description: True if the user mapping is applied.
+            type: boolean
+          primary_group:
+            description: Specifies persona properties for the primary user group.
+              A persona consists of either a type and name, or an ID.
+            type:
+            - description: Specifies properties for a persona, which consists of either
+                a 'type' and a 'name' or an 'ID'.
+              properties:
+                id:
+                  description: Specifies the serialized form of a persona, which can
+                    be 'UID:0', 'USER:name', 'GID:0', 'GROUP:wheel', or 'SID:S-1-1'.
+                  maxLength: 261
+                  minLength: 0
+                  type: string
+                name:
+                  description: Specifies the persona name, which must be combined
+                    with a type.
+                  maxLength: 255
+                  minLength: 0
+                  type:
+                  - string
+                  - 'null'
+                type:
+                  description: Specifies the type of persona, which must be combined
+                    with a name.
+                  enum:
+                  - user
+                  - group
+                  - wellknown
+                  type:
+                  - string
+                  - 'null'
+              type: object
+          secondary_groups:
+            description: Specifies persona properties for the secondary user group.
+              A persona consists of either a type and name, or an ID.
+            items:
+              type:
+              - description: Specifies properties for a persona, which consists of
+                  either a 'type' and a 'name' or an 'ID'.
+                properties:
+                  id:
+                    description: Specifies the serialized form of a persona, which
+                      can be 'UID:0', 'USER:name', 'GID:0', 'GROUP:wheel', or 'SID:S-1-1'.
+                    maxLength: 261
+                    minLength: 0
+                    type: string
+                  name:
+                    description: Specifies the persona name, which must be combined
+                      with a type.
+                    maxLength: 255
+                    minLength: 0
+                    type:
+                    - string
+                    - 'null'
+                  type:
+                    description: Specifies the type of persona, which must be combined
+                      with a name.
+                    enum:
+                    - user
+                    - group
+                    - wellknown
+                    type:
+                    - string
+                    - 'null'
+                type: object
+            type: array
+          user:
+            description: Specifies the name of the privilege.
+            type:
+            - description: Specifies properties for a persona, which consists of either
+                a 'type' and a 'name' or an 'ID'.
+              properties:
+                id:
+                  description: Specifies the serialized form of a persona, which can
+                    be 'UID:0', 'USER:name', 'GID:0', 'GROUP:wheel', or 'SID:S-1-1'.
+                  maxLength: 261
+                  minLength: 0
+                  type: string
+                name:
+                  description: Specifies the persona name, which must be combined
+                    with a type.
+                  maxLength: 255
+                  minLength: 0
+                  type:
+                  - string
+                  - 'null'
+                type:
+                  description: Specifies the type of persona, which must be combined
+                    with a name.
+                  enum:
+                  - user
+                  - group
+                  - wellknown
+                  type:
+                  - string
+                  - 'null'
+              type: object
+        type: object
+    map_failure:
+      type:
+      - enum:
+        - '@DEFAULT'
+        type: string
+      - description: Specifies the users and groups to which clients should be mapped
+          to if authentication fails.
+        type:
+        - description: User and group mapping.
+          properties:
+            enabled:
+              description: True if the user mapping is applied.
+              type: boolean
+            primary_group:
+              description: Specifies persona properties for the primary user group.
+                A persona consists of either a type and name, or an ID.
+              type:
+              - description: Specifies properties for a persona, which consists of
+                  either a 'type' and a 'name' or an 'ID'.
+                properties:
+                  id:
+                    description: Specifies the serialized form of a persona, which
+                      can be 'UID:0', 'USER:name', 'GID:0', 'GROUP:wheel', or 'SID:S-1-1'.
+                    maxLength: 261
+                    minLength: 0
+                    type: string
+                  name:
+                    description: Specifies the persona name, which must be combined
+                      with a type.
+                    maxLength: 255
+                    minLength: 0
+                    type:
+                    - string
+                    - 'null'
+                  type:
+                    description: Specifies the type of persona, which must be combined
+                      with a name.
+                    enum:
+                    - user
+                    - group
+                    - wellknown
+                    type:
+                    - string
+                    - 'null'
+                type: object
+            secondary_groups:
+              description: Specifies persona properties for the secondary user group.
+                A persona consists of either a type and name, or an ID.
+              items:
+                type:
+                - description: Specifies properties for a persona, which consists
+                    of either a 'type' and a 'name' or an 'ID'.
+                  properties:
+                    id:
+                      description: Specifies the serialized form of a persona, which
+                        can be 'UID:0', 'USER:name', 'GID:0', 'GROUP:wheel', or 'SID:S-1-1'.
+                      maxLength: 261
+                      minLength: 0
+                      type: string
+                    name:
+                      description: Specifies the persona name, which must be combined
+                        with a type.
+                      maxLength: 255
+                      minLength: 0
+                      type:
+                      - string
+                      - 'null'
+                    type:
+                      description: Specifies the type of persona, which must be combined
+                        with a name.
+                      enum:
+                      - user
+                      - group
+                      - wellknown
+                      type:
+                      - string
+                      - 'null'
+                  type: object
+              type: array
+            user:
+              description: Specifies the name of the privilege.
+              type:
+              - description: Specifies properties for a persona, which consists of
+                  either a 'type' and a 'name' or an 'ID'.
+                properties:
+                  id:
+                    description: Specifies the serialized form of a persona, which
+                      can be 'UID:0', 'USER:name', 'GID:0', 'GROUP:wheel', or 'SID:S-1-1'.
+                    maxLength: 261
+                    minLength: 0
+                    type: string
+                  name:
+                    description: Specifies the persona name, which must be combined
+                      with a type.
+                    maxLength: 255
+                    minLength: 0
+                    type:
+                    - string
+                    - 'null'
+                  type:
+                    description: Specifies the type of persona, which must be combined
+                      with a name.
+                    enum:
+                    - user
+                    - group
+                    - wellknown
+                    type:
+                    - string
+                    - 'null'
+                type: object
+          type: object
+    map_full:
+      description: True if user mappings query the OneFS user database. When set to
+        false, user mappings only query local authentication.
+      type: boolean
+    map_lookup_uid:
+      description: True if incoming user IDs (UIDs) are mapped to users in the OneFS
+        user database. When set to false, incoming UIDs are applied directly to file
+        operations.
+      type: boolean
+    map_non_root:
+      type:
+      - enum:
+        - '@DEFAULT'
+        type: string
+      - description: Specifies the users and groups to which non-root clients are
+          mapped.
+        type:
+        - description: User and group mapping.
+          properties:
+            enabled:
+              description: True if the user mapping is applied.
+              type: boolean
+            primary_group:
+              description: Specifies persona properties for the primary user group.
+                A persona consists of either a type and name, or an ID.
+              type:
+              - description: Specifies properties for a persona, which consists of
+                  either a 'type' and a 'name' or an 'ID'.
+                properties:
+                  id:
+                    description: Specifies the serialized form of a persona, which
+                      can be 'UID:0', 'USER:name', 'GID:0', 'GROUP:wheel', or 'SID:S-1-1'.
+                    maxLength: 261
+                    minLength: 0
+                    type: string
+                  name:
+                    description: Specifies the persona name, which must be combined
+                      with a type.
+                    maxLength: 255
+                    minLength: 0
+                    type:
+                    - string
+                    - 'null'
+                  type:
+                    description: Specifies the type of persona, which must be combined
+                      with a name.
+                    enum:
+                    - user
+                    - group
+                    - wellknown
+                    type:
+                    - string
+                    - 'null'
+                type: object
+            secondary_groups:
+              description: Specifies persona properties for the secondary user group.
+                A persona consists of either a type and name, or an ID.
+              items:
+                type:
+                - description: Specifies properties for a persona, which consists
+                    of either a 'type' and a 'name' or an 'ID'.
+                  properties:
+                    id:
+                      description: Specifies the serialized form of a persona, which
+                        can be 'UID:0', 'USER:name', 'GID:0', 'GROUP:wheel', or 'SID:S-1-1'.
+                      maxLength: 261
+                      minLength: 0
+                      type: string
+                    name:
+                      description: Specifies the persona name, which must be combined
+                        with a type.
+                      maxLength: 255
+                      minLength: 0
+                      type:
+                      - string
+                      - 'null'
+                    type:
+                      description: Specifies the type of persona, which must be combined
+                        with a name.
+                      enum:
+                      - user
+                      - group
+                      - wellknown
+                      type:
+                      - string
+                      - 'null'
+                  type: object
+              type: array
+            user:
+              description: Specifies the name of the privilege.
+              type:
+              - description: Specifies properties for a persona, which consists of
+                  either a 'type' and a 'name' or an 'ID'.
+                properties:
+                  id:
+                    description: Specifies the serialized form of a persona, which
+                      can be 'UID:0', 'USER:name', 'GID:0', 'GROUP:wheel', or 'SID:S-1-1'.
+                    maxLength: 261
+                    minLength: 0
+                    type: string
+                  name:
+                    description: Specifies the persona name, which must be combined
+                      with a type.
+                    maxLength: 255
+                    minLength: 0
+                    type:
+                    - string
+                    - 'null'
+                  type:
+                    description: Specifies the type of persona, which must be combined
+                      with a name.
+                    enum:
+                    - user
+                    - group
+                    - wellknown
+                    type:
+                    - string
+                    - 'null'
+                type: object
+          type: object
+    map_retry:
+      description: Determines whether searches for users specified in 'map_all', 'map_root'
+        or 'map_nonroot' are retried if the search fails.
+      type: boolean
+    map_root:
+      type:
+      - enum:
+        - '@DEFAULT'
+        type: string
+      - description: Specifies the users and groups to which root clients are mapped.
+        type:
+        - description: User and group mapping.
+          properties:
+            enabled:
+              description: True if the user mapping is applied.
+              type: boolean
+            primary_group:
+              description: Specifies persona properties for the primary user group.
+                A persona consists of either a type and name, or an ID.
+              type:
+              - description: Specifies properties for a persona, which consists of
+                  either a 'type' and a 'name' or an 'ID'.
+                properties:
+                  id:
+                    description: Specifies the serialized form of a persona, which
+                      can be 'UID:0', 'USER:name', 'GID:0', 'GROUP:wheel', or 'SID:S-1-1'.
+                    maxLength: 261
+                    minLength: 0
+                    type: string
+                  name:
+                    description: Specifies the persona name, which must be combined
+                      with a type.
+                    maxLength: 255
+                    minLength: 0
+                    type:
+                    - string
+                    - 'null'
+                  type:
+                    description: Specifies the type of persona, which must be combined
+                      with a name.
+                    enum:
+                    - user
+                    - group
+                    - wellknown
+                    type:
+                    - string
+                    - 'null'
+                type: object
+            secondary_groups:
+              description: Specifies persona properties for the secondary user group.
+                A persona consists of either a type and name, or an ID.
+              items:
+                type:
+                - description: Specifies properties for a persona, which consists
+                    of either a 'type' and a 'name' or an 'ID'.
+                  properties:
+                    id:
+                      description: Specifies the serialized form of a persona, which
+                        can be 'UID:0', 'USER:name', 'GID:0', 'GROUP:wheel', or 'SID:S-1-1'.
+                      maxLength: 261
+                      minLength: 0
+                      type: string
+                    name:
+                      description: Specifies the persona name, which must be combined
+                        with a type.
+                      maxLength: 255
+                      minLength: 0
+                      type:
+                      - string
+                      - 'null'
+                    type:
+                      description: Specifies the type of persona, which must be combined
+                        with a name.
+                      enum:
+                      - user
+                      - group
+                      - wellknown
+                      type:
+                      - string
+                      - 'null'
+                  type: object
+              type: array
+            user:
+              description: Specifies the name of the privilege.
+              type:
+              - description: Specifies properties for a persona, which consists of
+                  either a 'type' and a 'name' or an 'ID'.
+                properties:
+                  id:
+                    description: Specifies the serialized form of a persona, which
+                      can be 'UID:0', 'USER:name', 'GID:0', 'GROUP:wheel', or 'SID:S-1-1'.
+                    maxLength: 261
+                    minLength: 0
+                    type: string
+                  name:
+                    description: Specifies the persona name, which must be combined
+                      with a type.
+                    maxLength: 255
+                    minLength: 0
+                    type:
+                    - string
+                    - 'null'
+                  type:
+                    description: Specifies the type of persona, which must be combined
+                      with a name.
+                    enum:
+                    - user
+                    - group
+                    - wellknown
+                    type:
+                    - string
+                    - 'null'
+                type: object
+          type: object
+    max_file_size:
+      description: Specifies the maximum file size for any file accessed from the
+        export. This parameter does not affect server behavior, but is included to
+        accommodate legacy client requirements.
+      type: integer
+    name_max_size:
+      description: Specifies the reported maximum length of a file name. This parameter
+        does not affect server behavior, but is included to accommodate legacy client
+        requirements.
+      maximum: 4294967295
+      minimum: 0
+      type: integer
+    no_truncate:
+      description: True if long file names result in an error. This parameter does
+        not affect server behavior, but is included to accommodate legacy client requirements.
+      type: boolean
+    paths:
+      description: Specifies the paths under /ifs that are exported.
+      items:
+        type: string
+      required: true
+      type: array
+    read_only:
+      description: True if the export is set to read-only.
+      type: boolean
+    read_only_clients:
+      description: Specifies the clients with read-only access to the export.
+      items:
+        type: string
+      type: array
+    read_transfer_max_size:
+      description: Specifies the maximum buffer size that clients should use on NFS
+        read requests. This value is used to advise the client of optimal settings
+        for the server, but is not enforced.
+      maximum: 4294967295
+      minimum: 0
+      type: integer
+    read_transfer_multiple:
+      description: Specifies the preferred multiple size for NFS read requests. This
+        value is used to advise the client of optimal settings for the server, but
+        is not enforced.
+      maximum: 4294967295
+      minimum: 0
+      type: integer
+    read_transfer_size:
+      description: Specifies the preferred size for NFS read requests. This value
+        is used to advise the client of optimal settings for the server, but is not
+        enforced.
+      maximum: 4294967295
+      minimum: 0
+      type: integer
+    read_write_clients:
+      description: Specifies the clients with both read and write access to the export,
+        even when the export is set to read-only.
+      items:
+        type: string
+      type: array
+    readdirplus:
+      description: True if 'readdirplus' requests are enabled. Enabling this property
+        might improve network performance and is only available for NFSv3.
+      type: boolean
+    readdirplus_prefetch:
+      description: Sets the number of directory entries that are prefetched when a
+        'readdirplus' request is processed. (Deprecated.)
+      maximum: 4294967295
+      minimum: 0
+      type: integer
+    return_32bit_file_ids:
+      description: Limits the size of file identifiers returned by NFSv3+ to 32-bit
+        values (may require remount).
+      type: boolean
+    root_clients:
+      description: Clients that have root access to the export.
+      items:
+        type: string
+      type: array
+    security_flavors:
+      type:
+      - enum:
+        - '@DEFAULT'
+        type: string
+      - description: Specifies the authentication types that are supported for this
+          export.
+        items:
+          description: Specifies the authentication types that are supported for this
+            export.
+          enum:
+          - unix
+          - krb5
+          - krb5i
+          - krb5p
+          type: string
+        type: array
+    setattr_asynchronous:
+      description: True if set attribute operations execute asynchronously.
+      type: boolean
+    snapshot:
+      description: Specifies the snapshot for all mounts.
+      type: string
+    symlinks:
+      description: True if symlinks are supported. This value is used to advise the
+        client of optimal settings for the server, but is not enforced.
+      type: boolean
+    time_delta:
+      description: Specifies the resolution of all time values that are returned to
+        the clients
+      type: number
+    write_datasync_action:
+      description: Specifies the action to be taken when an NFSv3+ datasync write
+        is requested.
+      type:
+      - description: Specifies the synchronization type.
+        enum:
+        - DATASYNC
+        - FILESYNC
+        - UNSTABLE
+        type: string
+    write_datasync_reply:
+      description: Specifies the stability disposition returned when an NFSv3+ datasync
+        write is processed.
+      type:
+      - description: Specifies the synchronization type.
+        enum:
+        - DATASYNC
+        - FILESYNC
+        - UNSTABLE
+        type: string
+    write_filesync_action:
+      description: Specifies the action to be taken when an NFSv3+ filesync write
+        is requested.
+      type:
+      - description: Specifies the synchronization type.
+        enum:
+        - DATASYNC
+        - FILESYNC
+        - UNSTABLE
+        type: string
+    write_filesync_reply:
+      description: Specifies the stability disposition returned when an NFSv3+ filesync
+        write is processed.
+      type:
+      - description: Specifies the synchronization type.
+        enum:
+        - DATASYNC
+        - FILESYNC
+        - UNSTABLE
+        type: string
+    write_transfer_max_size:
+      description: Specifies the maximum buffer size that clients should use on NFS
+        write requests. This value is used to advise the client of optimal settings
+        for the server, but is not enforced.
+      maximum: 4294967295
+      minimum: 0
+      type: integer
+    write_transfer_multiple:
+      description: Specifies the preferred multiple size for NFS write requests. This
+        value is used to advise the client of optimal settings for the server, but
+        is not enforced.
+      maximum: 4294967295
+      minimum: 0
+      type: integer
+    write_transfer_size:
+      description: Specifies the preferred multiple size for NFS write requests. This
+        value is used to advise the client of optimal settings for the server, but
+        is not enforced.
+      maximum: 4294967295
+      minimum: 0
+      type: integer
+    write_unstable_action:
+      description: Specifies the action to be taken when an NFSv3+ unstable write
+        is requested.
+      type:
+      - description: Specifies the synchronization type.
+        enum:
+        - DATASYNC
+        - FILESYNC
+        - UNSTABLE
+        type: string
+    write_unstable_reply:
+      description: Specifies the stability disposition returned when an NFSv3+ unstable
+        write is processed.
+      type:
+      - description: Specifies the synchronization type.
+        enum:
+        - DATASYNC
+        - FILESYNC
+        - UNSTABLE
+        type: string
+    zone:
+      description: Specifies the zone in which the export is valid.
+      type: string
+  type: object
+  x-privilege: ISI_PRIV_NFS_EXPORTS
+POST_output_schema:
+  type:
+  - additionalProperties: false
+    description: A list of errors that may be returned.
+    properties:
+      errors:
+        items:
+          additionalProperties: false
+          description: An object describing a single error.
+          properties:
+            code:
+              description: The error code.
+              maxLength: 8192
+              minLength: 1
+              type: string
+            field:
+              description: The field with the error if applicable.
+              maxLength: 8192
+              minLength: 1
+              type: string
+            message:
+              description: The error message.
+              maxLength: 8192
+              minLength: 1
+              type: string
+          type: object
+        maxItems: 65535
+        minItems: 1
+        type: array
+    type: object
+  - properties:
+      id:
+        description: ID of created item that can be used to refer to item in the collection-item
+          resource path.
+        maximum: 18446744073709551615
+        minimum: 0
+        required: true
+        type: integer
+    type: object
+    x-privilege: ISI_PRIV_NFS_EXPORTS
