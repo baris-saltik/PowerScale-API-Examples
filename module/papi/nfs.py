@@ -87,12 +87,15 @@ class NFS(object):
                     content = file.read()
                 
                 try:
-                    config = yaml.load(content,Loader=yaml.Loader)['spec']
+                    config = yaml.load(content,Loader=yaml.Loader)
                 except Exception as e:
                     logger.error("Configuration for the object could not be obained. Quiting...")
                     return False
                 
-        self._exportDirectory = config['paths'][0]
+         # If zone specified in the arguments then overwrite the zone value in the config dictionary.
+        _zone =  zone if zone else config['metadata']['zone']
+   
+        self._exportDirectory = config['spec']['paths'][0]
         
         if not self.check_path():
             logger.info(f"Export path {self._exportDirectory} does not exist. Creating...")
@@ -100,24 +103,19 @@ class NFS(object):
                 logger.error("Could not create the path. Giving up...")
                 return False
 
-        # If zone specified in the arguments then overwrite the zone value in the config dictionary.
-        if zone:
-            config['zone'] = zone
-
-        _params = {"zone": config['zone']}
-
         # Request payload type will be of json.
         # This sets the respective header to inform the server that the payload is json formatted string.
         _headers = self.headers
         _headers.update({"Content-Type": "application/json"})
-        _data = json.dumps(config)
+        _data = json.dumps(config['spec'])
+        _params = {"zone": _zone}
         
         try:
             _response = self.session.post(url=self.exportsUrl, cookies=self.cookies, headers=_headers, params=_params, data=_data)
             _response.raise_for_status()
-            logger.info(f"Export for path: {config['paths'][0]} has been created!")
+            logger.info(f"Export for path: {self._exportDirectory} has been created!")
         except Exception as e:
-            logger.error(f"Export creation for path: {config['paths'][0]} failed!")
+            logger.error(f"Export creation for path: {self._exportDirectory} failed!")
             logger.error(e)
             return False
 
@@ -193,7 +191,7 @@ if __name__ == "__main__":
     id = "3"
     
     # actions = ["exports_summary", "list_exports", "create_export", "delete_export"]
-    actions = ["delete_export"]
+    actions = ["create_export"]
 
     # Get the logger.
     logging.config.dictConfig(get_log_config(level=log_level))

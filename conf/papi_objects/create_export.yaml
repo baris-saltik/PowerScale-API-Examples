@@ -1,11 +1,11 @@
 version: v1
 kind: Export
 metadata:
+  zone: "zone1"
 spec:
-  zone: zone1
-  description: "Export 1"
+  description: "Export 15"
   paths: 
-    - "/ifs/data/zone1/nfs/export4"
+    - "/ifs/data/zone1/nfs/export15"
   clients:
     - "0.0.0.0/0.0.0.0"
   root_clients:

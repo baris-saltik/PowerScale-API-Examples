@@ -1,0 +1,1068 @@
+DELETE_args:
+  description: Delete multiple smb shares.
+  properties:
+    zone:
+      description: Specifies which access zone to use.
+      maxLength: 255
+      minLength: 0
+      type: string
+  type: object
+GET_args:
+  description: List all shares.
+  properties:
+    dir:
+      description: The direction of the sort.
+      enum:
+      - ASC
+      - DESC
+      minLength: 0
+      type: string
+    limit:
+      description: Return no more than this many results at once (see resume).
+      maximum: 5000
+      minimum: 1
+      type: integer
+    offset:
+      description: The position of the first item returned for a paginated query within
+        the full result set.
+      maximum: 4294967295
+      minimum: 0
+      type: integer
+    resolve_names:
+      description: If true, resolve group and user names in personas.
+      type: boolean
+    resume:
+      description: Continue returning results from previous call using this token
+        (token should come from the previous call, resume cannot be used with other
+        options).
+      maxLength: 8192
+      minLength: 0
+      type: string
+    scope:
+      description: If specified as "effective" or not specified, all fields are returned.  If
+        specified as "user", only fields with non-default values are shown.  If specified
+        as "default", the original values are returned.
+      enum:
+      - user
+      - default
+      - effective
+      type: string
+    sort:
+      description: The field that will be used for sorting.
+      maxLength: 255
+      minLength: 0
+      type: string
+    zone:
+      description: Specifies which access zone to use.
+      maxLength: 255
+      minLength: 0
+      type: string
+  type: object
+GET_output_schema:
+  type:
+  - additionalProperties: false
+    description: A list of errors that may be returned.
+    properties:
+      errors:
+        items:
+          additionalProperties: false
+          description: An object describing a single error.
+          properties:
+            code:
+              description: The error code.
+              maxLength: 8192
+              minLength: 1
+              type: string
+            field:
+              description: The field with the error if applicable.
+              maxLength: 8192
+              minLength: 1
+              type: string
+            message:
+              description: The error message.
+              maxLength: 8192
+              minLength: 1
+              type: string
+          type: object
+        maxItems: 65535
+        minItems: 1
+        type: array
+    type: object
+  - additionalProperties: false
+    properties:
+      digest:
+        description: An identifier for a set of shares.
+        maxLength: 256
+        minLength: 0
+        type: string
+      resume:
+        description: Provide this token as the 'resume' query argument to continue
+          listing results.
+        maxLength: 8192
+        minLength: 0
+        type:
+        - string
+        - 'null'
+      shares:
+        items:
+          properties:
+            access_based_enumeration:
+              description: Only enumerate files and folders the requesting user has
+                access to.
+              type: boolean
+            access_based_enumeration_root_only:
+              description: Access-based enumeration on only the root directory of
+                the share.
+              type: boolean
+            allow_delete_readonly:
+              description: Allow deletion of read-only files in the share.
+              type: boolean
+            allow_execute_always:
+              description: Allows users to execute files they have read rights for.
+              type: boolean
+            allow_variable_expansion:
+              description: Allow automatic expansion of variables for home directories.
+              type: boolean
+            auto_create_directory:
+              description: Automatically create home directories.
+              type: boolean
+            browsable:
+              description: Share is visible in net view and the browse list.
+              type: boolean
+            ca_timeout:
+              description: Persistent open timeout for the share.
+              maximum: 6000
+              minimum: 2
+              type: integer
+            ca_write_integrity:
+              description: Specify the level of write-integrity on continuously available
+                shares.
+              enum:
+              - none
+              - write-read-coherent
+              - full
+              type: string
+            change_notify:
+              description: Level of change notification alerts on the share.
+              enum:
+              - all
+              - norecurse
+              - none
+              type: string
+            continuously_available:
+              description: Specify if persistent opens are allowed on the share.
+              type: boolean
+            create_permissions:
+              description: Create permissions for new files and directories in share.
+              enum:
+              - default acl
+              - inherit mode bits
+              - use create mask and mode
+              type: string
+            csc_policy:
+              description: Client-side caching policy for the shares.
+              enum:
+              - manual
+              - documents
+              - programs
+              - none
+              type: string
+            description:
+              description: Description for this SMB share.
+              maxLength: 511
+              minLength: 0
+              type: string
+            directory_create_mask:
+              description: Directory create mask bits.
+              maximum: 511
+              minimum: 0
+              type: integer
+            directory_create_mode:
+              description: Directory create mode bits.
+              maximum: 511
+              minimum: 0
+              type: integer
+            file_create_mask:
+              description: File create mask bits.
+              maximum: 511
+              minimum: 0
+              type: integer
+            file_create_mode:
+              description: File create mode bits.
+              maximum: 511
+              minimum: 0
+              type: integer
+            file_filter_extensions:
+              description: Specifies the list of file extensions.
+              items:
+                maxLength: 511
+                minLength: 1
+                type: string
+              maxItems: 4294967295
+              minItems: 0
+              type: array
+              uniqueItems: true
+            file_filter_type:
+              description: Specifies if filter list is for deny or allow. Default
+                is deny.
+              enum:
+              - deny
+              - allow
+              type: string
+            file_filtering_enabled:
+              description: Enables file filtering on this zone.
+              type: boolean
+            hide_dot_files:
+              description: Hide files and directories that begin with a period '.'.
+              type: boolean
+            host_acl:
+              description: An ACL expressing which hosts are allowed access. A deny
+                clause must be the final entry.
+              items:
+                description: <'allow:'|'deny:'><'ALL'|IP-range|subnet|fqdn>[' EXCEPT
+                  '<IP-range|subnet|fqdn>].
+                maxLength: 511
+                minLength: 1
+                type: string
+              maxItems: 4294967295
+              minItems: 0
+              type: array
+              uniqueItems: true
+            id:
+              description: Share ID.
+              maxLength: 511
+              minLength: 0
+              required: true
+              type:
+              - 'null'
+              - string
+            impersonate_guest:
+              description: Specify the condition in which user access is done as the
+                guest account.
+              enum:
+              - always
+              - bad user
+              - never
+              type: string
+            impersonate_user:
+              description: User account to be used as guest account.
+              maxLength: 511
+              minLength: 0
+              type: string
+            inheritable_path_acl:
+              description: Set the inheritable ACL on the share path.
+              type: boolean
+            mangle_byte_start:
+              description: Specifies the wchar_t starting point for automatic byte
+                mangling.
+              maximum: 65535
+              minimum: 256
+              type: integer
+            mangle_map:
+              description: Character mangle map.
+              items:
+                maxLength: 511
+                minLength: 1
+                type: string
+              maxItems: 4294967295
+              minItems: 0
+              type: array
+              uniqueItems: true
+            name:
+              description: Share name.
+              maxLength: 511
+              minLength: 1
+              required: true
+              type:
+              - 'null'
+              - string
+            ntfs_acl_support:
+              description: Support NTFS ACLs on files and directories.
+              type: boolean
+            oplocks:
+              description: Support oplocks.
+              type: boolean
+            path:
+              description: Path of share within /ifs.
+              maxLength: 4096
+              minLength: 4
+              pattern: ^/ifs$|^/ifs/
+              required: true
+              type:
+              - 'null'
+              - string
+            permissions:
+              description: Specifies an ordered list of permission modifications.
+              items:
+                description: Specifies properties for an Access Control Entry.
+                properties:
+                  permission:
+                    description: Specifies the file system rights that are allowed
+                      or denied.
+                    enum:
+                    - full
+                    - change
+                    - read
+                    required: true
+                    type: string
+                  permission_type:
+                    description: Determines whether the permission is allowed or denied.
+                    enum:
+                    - allow
+                    - deny
+                    required: true
+                    type: string
+                  trustee:
+                    description: Specifies properties for a persona, which consists
+                      of either a 'type' and a 'name' or an 'ID'.
+                    properties:
+                      id:
+                        description: Specifies the serialized form of a persona, which
+                          can be 'UID:0', 'USER:name', 'GID:0', 'GROUP:wheel', or
+                          'SID:S-1-1'.
+                        maxLength: 261
+                        minLength: 0
+                        type: string
+                      name:
+                        description: Specifies the persona name, which must be combined
+                          with a type.
+                        maxLength: 255
+                        minLength: 0
+                        type:
+                        - string
+                        - 'null'
+                      type:
+                        description: Specifies the type of persona, which must be
+                          combined with a name.
+                        enum:
+                        - user
+                        - group
+                        - wellknown
+                        type:
+                        - string
+                        - 'null'
+                    required: true
+                    type: object
+                type: object
+              maxItems: 4294967295
+              minItems: 0
+              type: array
+              uniqueItems: true
+            run_as_root:
+              description: Allow account to run as root.
+              items:
+                description: Specifies properties for a persona, which consists of
+                  either a 'type' and a 'name' or an 'ID'.
+                properties:
+                  id:
+                    description: Specifies the serialized form of a persona, which
+                      can be 'UID:0', 'USER:name', 'GID:0', 'GROUP:wheel', or 'SID:S-1-1'.
+                    maxLength: 261
+                    minLength: 0
+                    type: string
+                  name:
+                    description: Specifies the persona name, which must be combined
+                      with a type.
+                    maxLength: 255
+                    minLength: 0
+                    type:
+                    - string
+                    - 'null'
+                  type:
+                    description: Specifies the type of persona, which must be combined
+                      with a name.
+                    enum:
+                    - user
+                    - group
+                    - wellknown
+                    type:
+                    - string
+                    - 'null'
+                type: object
+              maxItems: 4294967295
+              minItems: 0
+              type: array
+              uniqueItems: true
+            smb3_encryption_enabled:
+              description: Enables SMB3 encryption for the share.
+              type: boolean
+            sparse_file:
+              description: Enables sparse file.
+              type: boolean
+            strict_ca_lockout:
+              description: Specifies if persistent opens would do strict lockout on
+                the share.
+              type: boolean
+            strict_flush:
+              description: Handle SMB flush operations.
+              type: boolean
+            strict_locking:
+              description: Specifies whether byte range locks contend against SMB
+                I/O.
+              type: boolean
+            zid:
+              description: Numeric ID of the access zone which contains this SMB share
+              maximum: 4294967295
+              minimum: 0
+              required: true
+              type: integer
+          required: true
+          type: object
+        maxItems: 18446744073709551615
+        minItems: 0
+        type: array
+      total:
+        description: Total number of items available.
+        maximum: 18446744073709551615
+        minimum: 0
+        type: integer
+    type: object
+POST_args:
+  description: Create a new share.
+  properties:
+    zone:
+      description: Specifies which access zone to use.
+      maxLength: 255
+      minLength: 0
+      type: string
+  type: object
+POST_input_schema:
+  description: An array of ids to refer newly created SMB shares.
+  type:
+  - properties:
+      access_based_enumeration:
+        description: Only enumerate files and folders the requesting user has access
+          to.
+        type: boolean
+      access_based_enumeration_root_only:
+        description: Access-based enumeration on only the root directory of the share.
+        type: boolean
+      allow_delete_readonly:
+        description: Allow deletion of read-only files in the share.
+        type: boolean
+      allow_execute_always:
+        description: Allows users to execute files they have read rights for.
+        type: boolean
+      allow_variable_expansion:
+        description: Allow automatic expansion of variables for home directories.
+        type: boolean
+      auto_create_directory:
+        description: Automatically create home directories.
+        type: boolean
+      browsable:
+        description: Share is visible in net view and the browse list.
+        type: boolean
+      ca_timeout:
+        description: Persistent open timeout for the share.
+        maximum: 6000
+        minimum: 2
+        type: integer
+      ca_write_integrity:
+        description: Specify the level of write-integrity on continuously available
+          shares.
+        enum:
+        - none
+        - write-read-coherent
+        - full
+        type: string
+      change_notify:
+        description: Level of change notification alerts on the share.
+        enum:
+        - all
+        - norecurse
+        - none
+        type: string
+      continuously_available:
+        description: Specify if persistent opens are allowed on the share.
+        type: boolean
+      create_path:
+        description: Create path if does not exist.
+        type: boolean
+      create_permissions:
+        description: Create permissions for new files and directories in share.
+        enum:
+        - default acl
+        - inherit mode bits
+        - use create mask and mode
+        type: string
+      csc_policy:
+        description: Client-side caching policy for the shares.
+        enum:
+        - manual
+        - documents
+        - programs
+        - none
+        type: string
+      description:
+        description: Description for this SMB share.
+        maxLength: 511
+        minLength: 0
+        type: string
+      directory_create_mask:
+        description: Directory create mask bits.
+        maximum: 511
+        minimum: 0
+        type: integer
+      directory_create_mode:
+        description: Directory create mode bits.
+        maximum: 511
+        minimum: 0
+        type: integer
+      file_create_mask:
+        description: File create mask bits.
+        maximum: 511
+        minimum: 0
+        type: integer
+      file_create_mode:
+        description: File create mode bits.
+        maximum: 511
+        minimum: 0
+        type: integer
+      file_filter_extensions:
+        description: Specifies the list of file extensions.
+        items:
+          maxLength: 511
+          minLength: 1
+          type: string
+        maxItems: 4294967295
+        minItems: 0
+        type: array
+        uniqueItems: true
+      file_filter_type:
+        description: Specifies if filter list is for deny or allow. Default is deny.
+        enum:
+        - deny
+        - allow
+        type: string
+      file_filtering_enabled:
+        description: Enables file filtering on this zone.
+        type: boolean
+      hide_dot_files:
+        description: Hide files and directories that begin with a period '.'.
+        type: boolean
+      host_acl:
+        description: An ACL expressing which hosts are allowed access. A deny clause
+          must be the final entry.
+        items:
+          description: <'allow:'|'deny:'><'ALL'|IP-range|subnet|fqdn>[' EXCEPT '<IP-range|subnet|fqdn>].
+          maxLength: 511
+          minLength: 1
+          type: string
+        maxItems: 4294967295
+        minItems: 0
+        type: array
+        uniqueItems: true
+      impersonate_guest:
+        description: Specify the condition in which user access is done as the guest
+          account.
+        enum:
+        - always
+        - bad user
+        - never
+        type: string
+      impersonate_user:
+        description: User account to be used as guest account.
+        maxLength: 511
+        minLength: 0
+        type: string
+      inheritable_path_acl:
+        description: Set the inheritable ACL on the share path.
+        type: boolean
+      mangle_byte_start:
+        description: Specifies the wchar_t starting point for automatic byte mangling.
+        maximum: 65535
+        minimum: 256
+        type: integer
+      mangle_map:
+        description: Character mangle map.
+        items:
+          maxLength: 511
+          minLength: 1
+          type: string
+        maxItems: 4294967295
+        minItems: 0
+        type: array
+        uniqueItems: true
+      name:
+        description: Share name.
+        maxLength: 511
+        minLength: 1
+        required: true
+        type: string
+      ntfs_acl_support:
+        description: Support NTFS ACLs on files and directories.
+        type: boolean
+      oplocks:
+        description: Support oplocks.
+        type: boolean
+      path:
+        description: Path of share within /ifs.
+        maxLength: 4096
+        minLength: 4
+        pattern: ^/ifs$|^/ifs/
+        required: true
+        type: string
+      permissions:
+        description: Specifies an ordered list of permission modifications.
+        items:
+          description: Specifies properties for an Access Control Entry.
+          properties:
+            permission:
+              description: Specifies the file system rights that are allowed or denied.
+              enum:
+              - full
+              - change
+              - read
+              required: true
+              type: string
+            permission_type:
+              description: Determines whether the permission is allowed or denied.
+              enum:
+              - allow
+              - deny
+              required: true
+              type: string
+            trustee:
+              description: Specifies properties for a persona, which consists of either
+                a 'type' and a 'name' or an 'ID'.
+              properties:
+                id:
+                  description: Specifies the serialized form of a persona, which can
+                    be 'UID:0', 'USER:name', 'GID:0', 'GROUP:wheel', or 'SID:S-1-1'.
+                  maxLength: 261
+                  minLength: 0
+                  type: string
+                name:
+                  description: Specifies the persona name, which must be combined
+                    with a type.
+                  maxLength: 255
+                  minLength: 0
+                  type:
+                  - string
+                  - 'null'
+                type:
+                  description: Specifies the type of persona, which must be combined
+                    with a name.
+                  enum:
+                  - user
+                  - group
+                  - wellknown
+                  type:
+                  - string
+                  - 'null'
+              required: true
+              type: object
+          type: object
+        maxItems: 4294967295
+        minItems: 0
+        type: array
+        uniqueItems: true
+      run_as_root:
+        description: Allow account to run as root.
+        items:
+          description: Specifies properties for a persona, which consists of either
+            a 'type' and a 'name' or an 'ID'.
+          properties:
+            id:
+              description: Specifies the serialized form of a persona, which can be
+                'UID:0', 'USER:name', 'GID:0', 'GROUP:wheel', or 'SID:S-1-1'.
+              maxLength: 261
+              minLength: 0
+              type: string
+            name:
+              description: Specifies the persona name, which must be combined with
+                a type.
+              maxLength: 255
+              minLength: 0
+              type:
+              - string
+              - 'null'
+            type:
+              description: Specifies the type of persona, which must be combined with
+                a name.
+              enum:
+              - user
+              - group
+              - wellknown
+              type:
+              - string
+              - 'null'
+          type: object
+        maxItems: 4294967295
+        minItems: 0
+        type: array
+        uniqueItems: true
+      smb3_encryption_enabled:
+        description: Enables SMB3 encryption for the share.
+        type: boolean
+      sparse_file:
+        description: Enables sparse file.
+        type: boolean
+      strict_ca_lockout:
+        description: Specifies if persistent opens would do strict lockout on the
+          share.
+        type: boolean
+      strict_flush:
+        description: Handle SMB flush operations.
+        type: boolean
+      strict_locking:
+        description: Specifies whether byte range locks contend against SMB I/O.
+        type: boolean
+      zone:
+        description: Name of the access zone to which to move this SMB share.
+        maxLength: 511
+        minLength: 1
+        type: string
+    required: true
+    type: object
+  - items:
+      properties:
+        access_based_enumeration:
+          description: Only enumerate files and folders the requesting user has access
+            to.
+          type: boolean
+        access_based_enumeration_root_only:
+          description: Access-based enumeration on only the root directory of the
+            share.
+          type: boolean
+        allow_delete_readonly:
+          description: Allow deletion of read-only files in the share.
+          type: boolean
+        allow_execute_always:
+          description: Allows users to execute files they have read rights for.
+          type: boolean
+        allow_variable_expansion:
+          description: Allow automatic expansion of variables for home directories.
+          type: boolean
+        auto_create_directory:
+          description: Automatically create home directories.
+          type: boolean
+        browsable:
+          description: Share is visible in net view and the browse list.
+          type: boolean
+        ca_timeout:
+          description: Persistent open timeout for the share.
+          maximum: 6000
+          minimum: 2
+          type: integer
+        ca_write_integrity:
+          description: Specify the level of write-integrity on continuously available
+            shares.
+          enum:
+          - none
+          - write-read-coherent
+          - full
+          type: string
+        change_notify:
+          description: Level of change notification alerts on the share.
+          enum:
+          - all
+          - norecurse
+          - none
+          type: string
+        continuously_available:
+          description: Specify if persistent opens are allowed on the share.
+          type: boolean
+        create_path:
+          description: Create path if does not exist.
+          type: boolean
+        create_permissions:
+          description: Create permissions for new files and directories in share.
+          enum:
+          - default acl
+          - inherit mode bits
+          - use create mask and mode
+          type: string
+        csc_policy:
+          description: Client-side caching policy for the shares.
+          enum:
+          - manual
+          - documents
+          - programs
+          - none
+          type: string
+        description:
+          description: Description for this SMB share.
+          maxLength: 511
+          minLength: 0
+          type: string
+        directory_create_mask:
+          description: Directory create mask bits.
+          maximum: 511
+          minimum: 0
+          type: integer
+        directory_create_mode:
+          description: Directory create mode bits.
+          maximum: 511
+          minimum: 0
+          type: integer
+        file_create_mask:
+          description: File create mask bits.
+          maximum: 511
+          minimum: 0
+          type: integer
+        file_create_mode:
+          description: File create mode bits.
+          maximum: 511
+          minimum: 0
+          type: integer
+        file_filter_extensions:
+          description: Specifies the list of file extensions.
+          items:
+            maxLength: 511
+            minLength: 1
+            type: string
+          maxItems: 4294967295
+          minItems: 0
+          type: array
+          uniqueItems: true
+        file_filter_type:
+          description: Specifies if filter list is for deny or allow. Default is deny.
+          enum:
+          - deny
+          - allow
+          type: string
+        file_filtering_enabled:
+          description: Enables file filtering on this zone.
+          type: boolean
+        hide_dot_files:
+          description: Hide files and directories that begin with a period '.'.
+          type: boolean
+        host_acl:
+          description: An ACL expressing which hosts are allowed access. A deny clause
+            must be the final entry.
+          items:
+            description: <'allow:'|'deny:'><'ALL'|IP-range|subnet|fqdn>[' EXCEPT '<IP-range|subnet|fqdn>].
+            maxLength: 511
+            minLength: 1
+            type: string
+          maxItems: 4294967295
+          minItems: 0
+          type: array
+          uniqueItems: true
+        impersonate_guest:
+          description: Specify the condition in which user access is done as the guest
+            account.
+          enum:
+          - always
+          - bad user
+          - never
+          type: string
+        impersonate_user:
+          description: User account to be used as guest account.
+          maxLength: 511
+          minLength: 0
+          type: string
+        inheritable_path_acl:
+          description: Set the inheritable ACL on the share path.
+          type: boolean
+        mangle_byte_start:
+          description: Specifies the wchar_t starting point for automatic byte mangling.
+          maximum: 65535
+          minimum: 256
+          type: integer
+        mangle_map:
+          description: Character mangle map.
+          items:
+            maxLength: 511
+            minLength: 1
+            type: string
+          maxItems: 4294967295
+          minItems: 0
+          type: array
+          uniqueItems: true
+        name:
+          description: Share name.
+          maxLength: 511
+          minLength: 1
+          required: true
+          type: string
+        ntfs_acl_support:
+          description: Support NTFS ACLs on files and directories.
+          type: boolean
+        oplocks:
+          description: Support oplocks.
+          type: boolean
+        path:
+          description: Path of share within /ifs.
+          maxLength: 4096
+          minLength: 4
+          pattern: ^/ifs$|^/ifs/
+          required: true
+          type: string
+        permissions:
+          description: Specifies an ordered list of permission modifications.
+          items:
+            description: Specifies properties for an Access Control Entry.
+            properties:
+              permission:
+                description: Specifies the file system rights that are allowed or
+                  denied.
+                enum:
+                - full
+                - change
+                - read
+                required: true
+                type: string
+              permission_type:
+                description: Determines whether the permission is allowed or denied.
+                enum:
+                - allow
+                - deny
+                required: true
+                type: string
+              trustee:
+                description: Specifies properties for a persona, which consists of
+                  either a 'type' and a 'name' or an 'ID'.
+                properties:
+                  id:
+                    description: Specifies the serialized form of a persona, which
+                      can be 'UID:0', 'USER:name', 'GID:0', 'GROUP:wheel', or 'SID:S-1-1'.
+                    maxLength: 261
+                    minLength: 0
+                    type: string
+                  name:
+                    description: Specifies the persona name, which must be combined
+                      with a type.
+                    maxLength: 255
+                    minLength: 0
+                    type:
+                    - string
+                    - 'null'
+                  type:
+                    description: Specifies the type of persona, which must be combined
+                      with a name.
+                    enum:
+                    - user
+                    - group
+                    - wellknown
+                    type:
+                    - string
+                    - 'null'
+                required: true
+                type: object
+            type: object
+          maxItems: 4294967295
+          minItems: 0
+          type: array
+          uniqueItems: true
+        run_as_root:
+          description: Allow account to run as root.
+          items:
+            description: Specifies properties for a persona, which consists of either
+              a 'type' and a 'name' or an 'ID'.
+            properties:
+              id:
+                description: Specifies the serialized form of a persona, which can
+                  be 'UID:0', 'USER:name', 'GID:0', 'GROUP:wheel', or 'SID:S-1-1'.
+                maxLength: 261
+                minLength: 0
+                type: string
+              name:
+                description: Specifies the persona name, which must be combined with
+                  a type.
+                maxLength: 255
+                minLength: 0
+                type:
+                - string
+                - 'null'
+              type:
+                description: Specifies the type of persona, which must be combined
+                  with a name.
+                enum:
+                - user
+                - group
+                - wellknown
+                type:
+                - string
+                - 'null'
+            type: object
+          maxItems: 4294967295
+          minItems: 0
+          type: array
+          uniqueItems: true
+        smb3_encryption_enabled:
+          description: Enables SMB3 encryption for the share.
+          type: boolean
+        sparse_file:
+          description: Enables sparse file.
+          type: boolean
+        strict_ca_lockout:
+          description: Specifies if persistent opens would do strict lockout on the
+            share.
+          type: boolean
+        strict_flush:
+          description: Handle SMB flush operations.
+          type: boolean
+        strict_locking:
+          description: Specifies whether byte range locks contend against SMB I/O.
+          type: boolean
+        zone:
+          description: Name of the access zone to which to move this SMB share.
+          maxLength: 511
+          minLength: 1
+          type: string
+      required: true
+      type: object
+    maxItems: 4294967295
+    minItems: 0
+    type: array
+    uniqueItems: true
+POST_output_schema:
+  type:
+  - additionalProperties: false
+    description: A list of errors that may be returned.
+    properties:
+      errors:
+        items:
+          additionalProperties: false
+          description: An object describing a single error.
+          properties:
+            code:
+              description: The error code.
+              maxLength: 8192
+              minLength: 1
+              type: string
+            field:
+              description: The field with the error if applicable.
+              maxLength: 8192
+              minLength: 1
+              type: string
+            message:
+              description: The error message.
+              maxLength: 8192
+              minLength: 1
+              type: string
+          type: object
+        maxItems: 65535
+        minItems: 1
+        type: array
+    type: object
+  - type:
+    - additionalProperties: false
+      description: An array of ids to refer SMB shares.
+      properties:
+        id:
+          description: ID of created item that can be used to refer to item in the
+            collection-item resource path.
+          maxLength: 255
+          minLength: 1
+          required: true
+          type: string
+      type: object
+    - items:
+        additionalProperties: false
+        description: An array of ids to refer SMB shares.
+        properties:
+          id:
+            description: ID of created item that can be used to refer to item in the
+              collection-item resource path.
+            maxLength: 255
+            minLength: 1
+            required: true
+            type: string
+        type: object
+      maxItems: 4294967295
+      minItems: 0
+      type: array
+      uniqueItems: true

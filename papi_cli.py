@@ -8,6 +8,7 @@ import logging.config, sys, argparse
 from module.logconf.logconf import get_log_config
 from module.papi.auth import Auth
 from module.papi.nfs import NFS
+from module.papi.smb import SMB
 
 parser = argparse.ArgumentParser(description="Collective PowerScale API calls to automate defined operations",
                                epilog="Thanks for using the program!")
@@ -16,7 +17,7 @@ parser.add_argument("-u", "--username", action="store", required=True)
 parser.add_argument("-p", "--password", action="store", required=True)
 parser.add_argument("-b", "--baseUrl", action="store", required=True)
 parser.add_argument("-z", "--zone", action="store", required=True)
-parser.add_argument("-f", "--feature", action="store", choices=["nfs","cifs","quota","snap"], required=True)
+parser.add_argument("-f", "--feature", action="store", choices=["nfs","smb","quota","snap"], required=True)
 parser.add_argument("-a", "--action", action="store", choices=["list","create", "delete"], required=True)
 parser.add_argument("-c", "--config", action="store" , help="/path/to/yaml/config_file.yaml", required=False)
 parser.add_argument("-i", "--id", action="store" , help="Id an export or snapshot or name of a share.", required=False)
@@ -33,8 +34,8 @@ args = parser.parse_args(["--username", "root",
                           # "--baseUrl", "https://91.229.44.253:8080",
                           "--baseUrl", "https://192.168.184.141:8080",
                           "--zone", "system",
-                          "--feature", "nfs",
-                          "--action", "delete",
+                          "--feature", "smb",
+                          "--action", "create",
                           "--config", False,
                           "--id", "9",
                           "--version", None
@@ -130,6 +131,48 @@ if feature == "nfs":
         else:
             logger.error(f"Export deletion failed!")
 
+
+################ SMB Operations #####################
+if feature == "smb":
+    # Instantiate SMB object.
+    smb = SMB(auth=auth, papi_version=papi_version)
+
+    if action == "list":
+        # Get SMB Exports.
+        logger.info(f"SMB shares for zone: {zone} is requested.")
+
+        # exports is a list of exports.
+        (shares, successful) = smb.get_shares(zone = zone)
+
+        if successful: 
+            if exports:
+                for export in exports:
+                    logger.info( " ".join( ["Export: ", export['zone'], str(export['id']), export['paths'][0], ",".join( export['security_flavors'] ) ] ) )
+            else:
+                logger.info(f"NFS exports list is empty.")
+
+            logger.info(f"NFS exports list for zone: {zone} is completed.")
+        else:
+            logger.error(f"Could not get NFS exports list!")
+
+    elif action == "create":
+        # Create an NFS Export.
+        logger.info(f"NFS export creation in zone: {zone} is requested.")
+        successful = nfs.create_export(config=config, zone=zone)
+
+        if successful: 
+            logger.info(f"Export was created!")       
+        else:
+            logger.error(f"Export creationg failed!")
+
+    elif action == "delete":
+        logger.info(f"NFS export deletion for id: {id} is requested.")
+        successful = nfs.delete_export(zone=zone, id=id)
+
+        if successful: 
+            logger.info(f"Export was deleted!")       
+        else:
+            logger.error(f"Export deletion failed!")
 
 ## Delete the session
 logger.info(f"Session deletion was requested.")

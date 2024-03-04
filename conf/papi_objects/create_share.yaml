@@ -1,0 +1,18 @@
+version: v1
+kind: Share
+metadata:
+  zone: "zone1"
+spec:
+  name: "share15"
+  description: "Share 15"
+  path: "/ifs/data/zone1/smb/share15"
+  create_path: True
+  inheritable_path_acl: True
+  permissions:
+  - permission: full
+    permission_type: allow
+    trustee:
+      type: wellknown
+      name: everyone
+
+

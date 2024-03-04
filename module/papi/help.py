@@ -64,9 +64,12 @@ class Help(object):
             for api in value:
                 print(api)
 
-    def documentation_for_a_resource(self, apiVersion = "14", resourcePath = "protocols/nfs/exports-summary"):
+    def documentation_for_a_resource(self, apiVersion = None, resourcePath = "protocols/nfs/exports-summary"):
         _params = {"describe":"", "json":""}
-        _url = self.platformBaseUrl + f"{apiVersion}/" + resourcePath
+        if apiVersion:
+            _url = self.platformBaseUrl + f"{apiVersion}/" + resourcePath
+        else:
+            _url = self.platformBaseUrl + resourcePath
         
         _response = self.session.get(url=_url, cookies=self.cookies, headers=self.headers, params=_params)
         _response.raise_for_status()
@@ -74,9 +77,9 @@ class Help(object):
         print(yaml.dump(json.loads(_response.content.decode("utf-8")), default_flow_style=False))
 
         # Write the content into a file.
-        # helpFilePath = os.path.abspath( os.path.join( pathlib.Path(__file__).resolve().parents[2], "help", "nfs", "exports.help" ))
+        # helpFilePath = os.path.abspath( os.path.join( pathlib.Path(__file__).resolve().parents[2], "help", "smb", "shares.help" ))
         # with open(helpFilePath, "w") as file:
-        #    file.write(yaml.dump(json.loads(_response.content.decode("utf-8")), default_flow_style=False))
+        #   file.write(yaml.dump(json.loads(_response.content.decode("utf-8")), default_flow_style=False))
 
 
     def list_of_all_resources_for_a_feature(self, reosurcePath = "protocols/nfs/exports"):
@@ -96,6 +99,7 @@ if __name__ == "__main__":
     password = "3"
     # baseUrl = "https://91.229.44.253:8080" # onefs95
     baseUrl = "https://192.168.184.141:8080" # icarus
+    apiVersion = None
 
     auth = Auth(username=username, password = password, baseUrl = baseUrl)
 
@@ -104,7 +108,7 @@ if __name__ == "__main__":
     # helper.list_all_apis("nfs")
     # helper.list_all_apis_for_a_version(16)
     # helper.list_all_versions_for_a_resouce()
-    helper.documentation_for_a_resource(apiVersion = 16, resourcePath = "protocols/nfs/exports")
+    helper.documentation_for_a_resource(apiVersion = apiVersion, resourcePath = "protocols/smb/shares")
     # helper.list_of_all_resources_for_a_feature()
 
         

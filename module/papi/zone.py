@@ -25,20 +25,17 @@ class Zone(object):
         logger.info("Authenticated session!")
 
         self.session = auth.session
-        self.session.verify = auth.session.verify
         self.papi_version = papi_version
 
         # Get necessary cookies and headers
         self.baseUrl = auth.baseUrl
-        self.platformBaseUrl = self.baseUrl + "/platform/"
+        self.platformBaseUrl = auth.baseUrl + "/platform/"
         if not papi_version:
             self.zonesUrl = self.platformBaseUrl + "/zones"
             self.zonesSummaryUrl = self.platformBaseUrl + "/zones-summary"
         else:
             self.zonesUrl = self.platformBaseUrl + str(papi_version) + "/zones"
             self.zonesSummaryUrl = self.platformBaseUrl + str(papi_version) + "/zones-summary"
-
-        
         
         self.cookies = auth.cookies
         self.headers = auth.headers
@@ -46,7 +43,7 @@ class Zone(object):
     def get_zones_summary(self):
         
         try:
-            # response = self.session.get(url = _url, cookies=self.cookies, headers=self.headers)
+
             _response = self.session.get(url = self.zonesSummaryUrl, cookies=self.cookies, headers=self.headers)
             _response.raise_for_status()
             logger.debug(f"Zones summary: " + json.dumps(json.loads(_response.content)))
