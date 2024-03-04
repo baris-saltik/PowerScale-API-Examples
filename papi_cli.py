@@ -20,22 +20,24 @@ parser.add_argument("-f", "--feature", action="store", choices=["nfs","cifs","qu
 parser.add_argument("-a", "--action", action="store", choices=["list","create", "delete"], required=True)
 parser.add_argument("-c", "--config", action="store" , help="/path/to/yaml/config_file.yaml", required=False)
 parser.add_argument("-i", "--id", action="store" , help="Id an export or snapshot or name of a share.", required=False)
-parser.add_argument("-v", "--version", action="store", help="Papi Version", default="16", required=False)
+parser.add_argument("-v", "--version", action="store", help="Papi Version", default=None, required=False)
 parser.add_argument("-l", "--log_level", action="store" , choices=["critical", "error", "warning", "info", "debug"], default="info", required=False)
 
 
 # Following should be enabled and the next parse_args([...]) should be commented out in production.
 # args = parser.parse_args()
 args = parser.parse_args(["--username", "root",
-                          "--password", "Password77",
-                          "--baseUrl", "https://91.229.44.232:8080",
+                          "--password", "3",
+                          # "--password", "Password77",
+                          # "--baseUrl", "https://91.229.44.232:8080",
                           # "--baseUrl", "https://91.229.44.253:8080",
-                          "--zone", "zone1",
+                          "--baseUrl", "https://192.168.184.141:8080",
+                          "--zone", "system",
                           "--feature", "nfs",
-                          "--action", "create",
+                          "--action", "delete",
                           "--config", False,
-                          "--id", "14",
-                          "--version", "14"
+                          "--id", "9",
+                          "--version", None
                           ]
                           )
 
@@ -120,7 +122,7 @@ if feature == "nfs":
             logger.error(f"Export creationg failed!")
 
     elif action == "delete":
-        logger.info(f"NFS export deleteion for id: {id} is requested.")
+        logger.info(f"NFS export deletion for id: {id} is requested.")
         successful = nfs.delete_export(zone=zone, id=id)
 
         if successful: 

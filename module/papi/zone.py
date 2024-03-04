@@ -37,6 +37,9 @@ class Zone(object):
         else:
             self.zonesUrl = self.platformBaseUrl + str(papi_version) + "/zones"
             self.zonesSummaryUrl = self.platformBaseUrl + str(papi_version) + "/zones-summary"
+
+        
+        
         self.cookies = auth.cookies
         self.headers = auth.headers
 
@@ -55,6 +58,24 @@ class Zone(object):
     
         return json.loads(_response.content), True
 
+    def get_zones(self):
+        
+        try:
+            _response = self.session.get(url = self.zonesUrl, cookies=self.cookies, headers=self.headers)
+            _response.raise_for_status()
+            zones = json.loads(_response.content)['zones']
+            for z in zones:
+                logger.debug( " ".join( ["Zone: ", str(z['zone_id']), z['name'], z['path'] ] ) )
+                             
+        except Exception as e:
+            logger.error(f"Zones list request could not be completed!")
+            logger.error(e)
+            return False, False
+        
+        return zones, True
+
+
+
 if __name__ == "__main__":
 
     username = "root"
@@ -71,7 +92,7 @@ if __name__ == "__main__":
     id = "2"
     
     # actions = ["zones_summary", "list_zones"]
-    actions = ["zones_summary"]
+    actions = ["zones_summary", "list_zones"]
 
     # Get the logger.
     logging.config.dictConfig(get_log_config(level=log_level))
@@ -82,8 +103,8 @@ if __name__ == "__main__":
     zone = Zone(auth=auth, papi_version=papi_version)
 
     # Zones summary
-    logger.info(f"Zones summary is requested.")
     if "zones_summary" in actions:
+        logger.info(f"Zones summary is requested.")
 
         (zonesSummary, successful) = zone.get_zones_summary()
         if successful: 
@@ -96,22 +117,23 @@ if __name__ == "__main__":
         else:
             logger.error(f"Could not get Zones summary!")
 
-    # exports is a list of exports.
+    # zones is a list of exports.
     if "list_zones" in actions:
+        logger.info(f"Zones summary is requested.")
 
-        (exports, successful) = nfs.get_exports(zone = zone)
+        (zones, successful) = zone.get_zones()
 
         # Display attributes of each export from exports list.
         # list(map(print, [k for k in exports[0].keys()]))
 
         if successful: 
-            if exports:
-                for export in exports:
-                    logger.info( " ".join( ["Export: ", export['zone'], str(export['id']), export['paths'][0], ",".join( export['security_flavors'] ) ] ) )
+            if zones:
+                for z in zones:
+                    logger.info( " ".join( ["Zone: ", str(z['zone_id']), z['name'], z['path'] ] ) )
             else:
-                logger.info(f"NFS exports list is empty.")
+                logger.info(f"Zones list is empty.")
 
-            logger.info(f"NFS exports list for zone: {zone} is completed.")
+            logger.info(f"Zones list is completed.")
 
         else:
-            logger.error(f"Could not get NFS exports list!")
+            logger.error(f"Could not get zones list!")

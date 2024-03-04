@@ -5,7 +5,7 @@ spec:
   zone: zone1
   description: "Export 1"
   paths: 
-    - "/ifs/data/zone1/nfs/export2"
+    - "/ifs/data/zone1/nfs/export4"
   clients:
     - "0.0.0.0/0.0.0.0"
   root_clients:
@@ -13,4 +13,3 @@ spec:
   security_flavors:
     - unix
     - krb5
-  
