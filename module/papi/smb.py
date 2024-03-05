@@ -171,7 +171,6 @@ if __name__ == "__main__":
 
     username = "root"
     # username = "papi"
-    # password = "Password77"
     password = "3"
     # baseUrl = "https://91.229.44.253:8080"
     # baseUrl = "https://91.229.44.232:8080"

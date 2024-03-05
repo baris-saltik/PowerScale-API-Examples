@@ -11,7 +11,7 @@ logger = logging.getLogger(__name__)
 
 class Auth(object):
 
-    def __init__(self, username, password, baseUrl, ca_cert_file_name = "BarisTrustServices.crt"):
+    def __init__(self, username, password, baseUrl, ca_cert_file_name = "FileOrbisTrustServices.crt"):
 
         self.authenticated = False
         self.username = username

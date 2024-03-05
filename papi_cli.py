@@ -29,13 +29,13 @@ parser.add_argument("-l", "--log_level", action="store" , choices=["critical", "
 # Following should be enabled and the next parse_args([...]) should be commented out in production.
 # args = parser.parse_args()
 args = parser.parse_args(["--username", "root",
-                          "--password", "3",
-                          # "--password", "Password77",
+                          # --password", "3",
+                          "--password", "Password77",
                           # "--baseUrl", "https://91.229.44.232:8080",
-                          # "--baseUrl", "https://91.229.44.253:8080",
-                          "--baseUrl", "https://192.168.184.141:8080",
-                          "--zone", "zone1",
-                          "--feature", "smb",
+                          "--baseUrl", "https://91.229.44.253:8080",
+                          # "--baseUrl", "https://192.168.184.141:8080",
+                          "--zone", "system",
+                          "--feature", "nfs",
                           "--action", "list",
                           "--config", False,
                           "--id", "share16",
@@ -118,18 +118,21 @@ if feature == "nfs":
         # Display attributes of each export from exports list.
         # list(map(print, [k for k in exports[0].keys()]))
         if successful: 
-            if exports:
+            if len(exports) > 0:
                 for export in exports:
                     logger.info( " ".join( ["Export: ", export['zone'], str(export['id']), export['paths'][0], ",".join( export['security_flavors'] ) ] ) )
+                
+                try:
+                    output = Output(exports)
+                    output.list_exports()
+                except Exception as e:
+                    logger.error(e)
+                
             else:
                 logger.info(f"NFS exports list is empty.")
 
             logger.info(f"NFS exports list for zone: {zone} is completed.")
-            try:
-                output = Output(exports)
-                output.list_exports()
-            except Exception as e:
-                logger.error(e)
+
 
         else:
             logger.error(f"Could not get NFS exports list!")
@@ -185,18 +188,21 @@ if feature == "smb":
         # list(map(print, [k for k in shares[0].keys()]))
 
         if successful: 
-            if shares:
+            if len(shares) > 0:
                 for share in shares:
                     logger.info( " ".join( ["Share: ", str(share['zid']), str(share['id']), share['path'] ] ) )
+
+                try:
+                    output = Output(shares)
+                    output.list_shares()
+                except Exception as e:
+                    logger.error(e)
+
             else:
                 logger.info(f"SMB shares list is empty.")
 
             logger.info(f"SMB shares list for zone: {zone} is completed.")
-            try:
-                output = Output(shares)
-                output.list_shares()
-            except Exception as e:
-                logger.error(e)
+
 
         else:
             logger.error(f"Could not get SMB shares list!")
