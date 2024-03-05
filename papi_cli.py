@@ -9,6 +9,7 @@ from module.logconf.logconf import get_log_config
 from module.papi.auth import Auth
 from module.papi.nfs import NFS
 from module.papi.smb import SMB
+from module.io.outputter import Output
 
 parser = argparse.ArgumentParser(description="Collective PowerScale API calls to automate defined operations",
                                epilog="Thanks for using the program!")
@@ -35,7 +36,7 @@ args = parser.parse_args(["--username", "root",
                           "--baseUrl", "https://192.168.184.141:8080",
                           "--zone", "zone1",
                           "--feature", "smb",
-                          "--action", "delete",
+                          "--action", "list",
                           "--config", False,
                           "--id", "share16",
                           "--version", None
@@ -124,8 +125,15 @@ if feature == "nfs":
                 logger.info(f"NFS exports list is empty.")
 
             logger.info(f"NFS exports list for zone: {zone} is completed.")
+            try:
+                output = Output(exports)
+                output.list_exports()
+            except Exception as e:
+                logger.error(e)
+
         else:
             logger.error(f"Could not get NFS exports list!")
+
 
     elif action == "create":
         # Create an NFS Export.
@@ -184,6 +192,11 @@ if feature == "smb":
                 logger.info(f"SMB shares list is empty.")
 
             logger.info(f"SMB shares list for zone: {zone} is completed.")
+            try:
+                output = Output(shares)
+                output.list_shares()
+            except Exception as e:
+                logger.error(e)
 
         else:
             logger.error(f"Could not get SMB shares list!")

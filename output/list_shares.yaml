@@ -1,0 +1,15 @@
+metadata:
+  status: success
+  time: 03/05/2024T10:25:00
+  zone: 2
+spec:
+  shares:
+  - id: share1
+    path: /ifs/data/zone1/smb/share1
+  - id: share2
+    path: /ifs/data/zone1/smb/share2
+  - id: share3
+    path: /ifs/data/zone1/smb/share3
+  - id: share4
+    path: /ifs/data/zone1/smb/share4
+version: v1

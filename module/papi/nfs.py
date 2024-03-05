@@ -234,6 +234,8 @@ if __name__ == "__main__":
 
             logger.info(f"NFS exports list for zone: {zone} is completed.")
 
+
+
         else:
             logger.error(f"Could not get NFS exports list!")
 

@@ -1,0 +1,15 @@
+metadata:
+  status: success
+  time: 03/05/2024T10:13:01
+  zone: zone1
+spec:
+  exports:
+  - id: 1
+    path: /ifs/data/zone1/nfs/export1
+    security_flavors:
+    - security_flavors
+  - id: 12
+    path: /ifs/data/zone1/nfs/export14
+    security_flavors:
+    - security_flavors
+version: v1

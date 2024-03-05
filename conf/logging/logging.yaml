@@ -33,6 +33,13 @@ handlers:
     filename: zone.log
     formatter: generic
     maxBytes: 1000
+  
+  outputter:
+    backupCount: 3
+    class: logging.handlers.RotatingFileHandler
+    filename: outputter.log
+    formatter: generic
+    maxBytes: 1000
 
   console:
     class: logging.StreamHandler
@@ -85,6 +92,13 @@ loggers:
   module.papi.zone:
     handlers:
     - zone
+    - console
+    level: DEBUG
+    propagate: false
+  
+  module.papi.outputter:
+    handlers:
+    - outputter
     - console
     level: DEBUG
     propagate: false
