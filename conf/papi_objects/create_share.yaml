@@ -3,9 +3,9 @@ kind: Share
 metadata:
   zone: "zone1"
 spec:
-  name: "share15"
-  description: "Share 15"
-  path: "/ifs/data/zone1/smb/share15"
+  name: "share16"
+  description: "Share 16"
+  path: "/ifs/data/zone1/smb/share16"
   create_path: True
   inheritable_path_acl: True
   permissions:

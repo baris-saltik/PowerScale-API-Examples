@@ -98,7 +98,8 @@ class SMB(object):
 
         print(_zone)
 
-        _zid = self.lookup_zid(_zone)
+        # Not necessary in OneFS 9.7.
+        # _zid = self.lookup_zid(_zone)
 
         # Request payload type will be of json.
         # This sets the respective header to inform the server that the payload is json formatted string.
@@ -107,11 +108,8 @@ class SMB(object):
         _data = json.dumps(config['spec'])
         _sharePath = config['spec']['path']
         _url = self.sharesUrl
-        _params = {"zone": "zone1"}
+        _params = {"zone": zone}
 
-        print(_params)
-        print(_data)
-        
         try:
             _response = self.session.post(url=self.sharesUrl, cookies=self.cookies, headers=_headers, params=_params, data=_data)
             _response.raise_for_status()
@@ -129,10 +127,10 @@ class SMB(object):
             logger.warning("No zone or share name is specified. Quiting...")
             return False
         
-        _zid = self.lookup_zid(zone)
+        # _zid = self.lookup_zid(zone)
 
         _url = self.sharesUrl + f"/{str(id)}"
-        _params = {"zone": _zid}
+        _params = {"zone": zone}
 
         try:
             _response = self.session.delete(url=_url, cookies=self.cookies, headers=self.headers, params=_params)
@@ -183,10 +181,10 @@ if __name__ == "__main__":
     log_level = "debug"
     # papi_version = "16"
     papi_version = None
-    id = "share14"
+    id = "share15"
     
     # actions = ["shares_summary", "list_shares", "create_share", "delete_share"]
-    actions = ["create_share"]
+    actions = ["delete_share"]
 
     # Get the logger.
     logging.config.dictConfig(get_log_config(level=log_level))
@@ -246,7 +244,7 @@ if __name__ == "__main__":
     ### Delete a share.
     if "delete_share" in actions:
         logger.info(f"SMB export deletion is requested.")
-        successful = smb.delete_export(zone=zone, id=id)
+        successful = smb.delete_share(zone=zone, id=id)
 
         if successful: 
             logger.info(f"Share was deleted!")       

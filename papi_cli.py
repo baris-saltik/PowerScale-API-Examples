@@ -18,7 +18,7 @@ parser.add_argument("-p", "--password", action="store", required=True)
 parser.add_argument("-b", "--baseUrl", action="store", required=True)
 parser.add_argument("-z", "--zone", action="store", required=True)
 parser.add_argument("-f", "--feature", action="store", choices=["nfs","smb","quota","snap"], required=True)
-parser.add_argument("-a", "--action", action="store", choices=["list","create", "delete"], required=True)
+parser.add_argument("-a", "--action", action="store", choices=["summary", "list","create", "delete"], required=True)
 parser.add_argument("-c", "--config", action="store" , help="/path/to/yaml/config_file.yaml", required=False)
 parser.add_argument("-i", "--id", action="store" , help="Id an export or snapshot or name of a share.", required=False)
 parser.add_argument("-v", "--version", action="store", help="Papi Version", default=None, required=False)
@@ -33,11 +33,11 @@ args = parser.parse_args(["--username", "root",
                           # "--baseUrl", "https://91.229.44.232:8080",
                           # "--baseUrl", "https://91.229.44.253:8080",
                           "--baseUrl", "https://192.168.184.141:8080",
-                          "--zone", "system",
+                          "--zone", "zone1",
                           "--feature", "smb",
-                          "--action", "create",
+                          "--action", "delete",
                           "--config", False,
-                          "--id", "9",
+                          "--id", "share16",
                           "--version", None
                           ]
                           )
@@ -92,6 +92,21 @@ if feature == "nfs":
     # Instantiate NFS object
     nfs = NFS(auth=auth, papi_version=papi_version)
 
+    # Exports summary
+    if action == "summary":
+        logger.info(f"NFS exports for zone: {zone} is requested.")
+
+        (exportsSummary, successful) = nfs.get_exports_summary(zone = zone)
+        if successful: 
+            if exportsSummary:
+                logger.info(exportsSummary)
+            else:
+                logger.info(f"NFS summary is empty.")
+
+            logger.info(f"NFS exports summary for zone: {zone} is completed.")
+        else:
+            logger.error(f"Could not get NFS exports summary!")
+
     if action == "list":
         # Get NFS Exports.
         logger.info(f"NFS exports for zone: {zone} is requested.")
@@ -137,42 +152,62 @@ if feature == "smb":
     # Instantiate SMB object.
     smb = SMB(auth=auth, papi_version=papi_version)
 
-    if action == "list":
-        # Get SMB Exports.
-        logger.info(f"SMB shares for zone: {zone} is requested.")
+    # Shares summary
+    if action == "summary":
+        logger.info(f"SMB shares summary for zone: {zone} is requested.")
 
-        # exports is a list of exports.
+        (sharesSummary, successful) = smb.get_shares_summary(zone = zone)
+        if successful: 
+            if sharesSummary:
+                logger.info(sharesSummary)
+            else:
+                logger.info(f"SMB shares summary is empty.")
+
+            logger.info(f"SMB shares summary for zone: {zone} is completed.")
+        else:
+            logger.error(f"Could not get SMB shares summary!")
+
+    # shares is a list of shares.
+    if action == "list":
+        logger.info(f"SMB list for zone: {zone} is requested.")
+
         (shares, successful) = smb.get_shares(zone = zone)
 
+        # Display attributes of each export from shares list.
+        # list(map(print, [k for k in shares[0].keys()]))
+
         if successful: 
-            if exports:
-                for export in exports:
-                    logger.info( " ".join( ["Export: ", export['zone'], str(export['id']), export['paths'][0], ",".join( export['security_flavors'] ) ] ) )
+            if shares:
+                for share in shares:
+                    logger.info( " ".join( ["Share: ", str(share['zid']), str(share['id']), share['path'] ] ) )
             else:
-                logger.info(f"NFS exports list is empty.")
+                logger.info(f"SMB shares list is empty.")
 
-            logger.info(f"NFS exports list for zone: {zone} is completed.")
+            logger.info(f"SMB shares list for zone: {zone} is completed.")
+
         else:
-            logger.error(f"Could not get NFS exports list!")
+            logger.error(f"Could not get SMB shares list!")
 
-    elif action == "create":
-        # Create an NFS Export.
-        logger.info(f"NFS export creation in zone: {zone} is requested.")
-        successful = nfs.create_export(config=config, zone=zone)
+    ### Create a share.
+    if action == "create":
+
+        logger.info(f"SMB share creation is requested.")
+        successful = smb.create_share(zone=zone)
 
         if successful: 
-            logger.info(f"Export was created!")       
+            logger.info(f"Share was created!")       
         else:
-            logger.error(f"Export creationg failed!")
+            logger.error(f"Share creation failed!")
 
-    elif action == "delete":
-        logger.info(f"NFS export deletion for id: {id} is requested.")
-        successful = nfs.delete_export(zone=zone, id=id)
+    ### Delete a share.
+    if action == "delete":
+        logger.info(f"SMB export deletion is requested.")
+        successful = smb.delete_share(zone=zone, id=id)
 
         if successful: 
-            logger.info(f"Export was deleted!")       
+            logger.info(f"Share was deleted!")       
         else:
-            logger.error(f"Export deletion failed!")
+            logger.error(f"Share deletion failed!")
 
 ## Delete the session
 logger.info(f"Session deletion was requested.")
