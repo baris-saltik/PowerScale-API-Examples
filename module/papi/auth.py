@@ -11,14 +11,14 @@ logger = logging.getLogger(__name__)
 
 class Auth(object):
 
-    def __init__(self, username, password, baseUrl, ca_cert_file_name = "FileOrbisTrustServices.crt"):
+    def __init__(self, username, password, baseUrl, ca_cert = "FileOrbisTrustServices.crt"):
 
         self.authenticated = False
         self.username = username
         self.password = password
         self.baseUrl = baseUrl
         self.sessionUrl = baseUrl + "/session/1/session"
-        ca_cert_file_path = os.path.abspath(os.path.join(pathlib.Path(__file__).resolve().parents[2], "conf", "ca_certificates", ca_cert_file_name))
+        ca_cert_file_path = os.path.abspath(os.path.join(pathlib.Path(__file__).resolve().parents[2], "conf", "ca_certificates", ca_cert))
 
         _headers = {"Content-Type": "application/json"}
         _data = json.dumps(dict(username=self.username, password=self.password, services=["platform", "namespace"]))

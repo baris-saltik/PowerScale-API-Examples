@@ -22,6 +22,7 @@ parser.add_argument("-f", "--feature", action="store", choices=["nfs","smb","quo
 parser.add_argument("-a", "--action", action="store", choices=["summary", "list","create", "delete"], required=True)
 parser.add_argument("-c", "--config", action="store" , help="/path/to/yaml/config_file.yaml", required=False)
 parser.add_argument("-i", "--id", action="store" , help="Id an export or snapshot or name of a share.", required=False)
+parser.add_argument("-t", "--ca_cert", action="store" , help="Cetificate file for a CA", required=False)
 parser.add_argument("-v", "--version", action="store", help="Papi Version", default=None, required=False)
 parser.add_argument("-l", "--log_level", action="store" , choices=["critical", "error", "warning", "info", "debug"], default="info", required=False)
 
@@ -29,15 +30,16 @@ parser.add_argument("-l", "--log_level", action="store" , choices=["critical", "
 # Following should be enabled and the next parse_args([...]) should be commented out in production.
 # args = parser.parse_args()
 args = parser.parse_args(["--username", "root",
-                          # --password", "3",
-                          "--password", "Password77",
+                          "--password", "3",
+                          # "--password", "Password77",
                           # "--baseUrl", "https://91.229.44.232:8080",
-                          "--baseUrl", "https://91.229.44.253:8080",
-                          # "--baseUrl", "https://192.168.184.141:8080",
+                          # "--baseUrl", "https://91.229.44.253:8080",
+                          "--baseUrl", "https://192.168.184.141:8080",
                           "--zone", "system",
                           "--feature", "nfs",
                           "--action", "list",
                           "--config", False,
+                          "--ca_cert", "BarisTrustServices.crt",
                           "--id", "share16",
                           "--version", None
                           ]
@@ -49,6 +51,7 @@ baseUrl = args.baseUrl
 zone = args.zone
 feature = args.feature.lower()
 action = args.action.lower()
+ca_cert = args.ca_cert
 
 try:
     config = action.config 
@@ -68,7 +71,7 @@ logger.info(f"PowerScale CLI started...")
 logger.info(f"Authenticating the user {username}...")
 
 # Get authenticated.
-auth = Auth(username = username, password = password, baseUrl = baseUrl)
+auth = Auth(username = username, password = password, baseUrl = baseUrl, ca_cert = ca_cert)
 
 if not auth.authenticated:
     logger.error(f"Authentication failed for user: {username}, quiting!")

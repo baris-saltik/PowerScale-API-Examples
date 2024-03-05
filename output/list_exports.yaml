@@ -1,11 +1,16 @@
 metadata:
   status: success
-  time: 03/05/2024T07:40:17
+  time: 03/05/2024T16:26:27
   zone: System
 spec:
   exports:
-  - id: 36
+  - id: 1
     path: /ifs/data/zone1/nfs/export3
     security_flavors:
-    - security_flavors
+    - unix
+  - id: 3
+    path: /ifs/data/zone1/nfs/export4
+    security_flavors:
+    - unix
+    - krb5
 version: v1

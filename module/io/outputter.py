@@ -43,7 +43,7 @@ class Output(object):
             _ = {}
             _["id"] = i["id"]
             _["path"] = i["paths"][0]
-            _["security_flavors"] = ["security_flavors"]
+            _["security_flavors"] = i["security_flavors"]
             _specItems.append(_)
 
         _outPut["spec"] = {"exports": _specItems}
