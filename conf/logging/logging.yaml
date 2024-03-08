@@ -34,6 +34,13 @@ handlers:
     formatter: generic
     maxBytes: 1000
   
+  quota:
+    backupCount: 3
+    class: logging.handlers.RotatingFileHandler
+    filename: quota.log
+    formatter: generic
+    maxBytes: 1000
+
   outputter:
     backupCount: 3
     class: logging.handlers.RotatingFileHandler
@@ -92,6 +99,13 @@ loggers:
   module.papi.zone:
     handlers:
     - zone
+    - console
+    level: DEBUG
+    propagate: false
+  
+  module.papi.quota:
+    handlers:
+    - quota
     - console
     level: DEBUG
     propagate: false

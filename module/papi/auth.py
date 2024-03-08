@@ -31,6 +31,7 @@ class Auth(object):
 
         try:
             response = self.session.post(url=self.sessionUrl, headers=_headers, data=_data)
+            print(response.url)
             response.raise_for_status()
             self.authenticated = True
             logger.info(f"Authentication succeeded for user: {self.username}!")
