@@ -11,7 +11,7 @@ logger = logging.getLogger(__name__)
 
 class Auth(object):
 
-    def __init__(self, username, password, baseUrl, ca_cert = "FileOrbisTrustServices.crt"):
+    def __init__(self, username, password, baseUrl, ca_cert = "CACertFile.crt"):
 
         self.authenticated = False
         self.username = username
@@ -85,7 +85,7 @@ if __name__ == "__main__":
     logger = logging.getLogger("module.papi.auth")
     # logger.info(f"Logging test module.papi.auth")
 
-    auth = Auth(username="root", password = "Password77", baseUrl="https://91.229.44.253:8080")
+    auth = Auth(username="user", password = "password", baseUrl="https://IP:8080")
     print(auth.get_session_info())
     print("#" * 100)
     print(auth.delete_session())
