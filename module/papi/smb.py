@@ -171,11 +171,8 @@ if __name__ == "__main__":
 
     username = "root"
     # username = "papi"
-    password = "3"
-    # baseUrl = "https://91.229.44.253:8080"
-    # baseUrl = "https://91.229.44.232:8080"
-    # baseUrl = "https://192.168.184.141:8080"
-    baseUrl = "https://192.168.184.141:8080"
+    password = "password"
+    baseUrl = "https://IP:8080"
     zone = "zone1"
     log_level = "debug"
     # papi_version = "16"
