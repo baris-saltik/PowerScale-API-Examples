@@ -175,13 +175,10 @@ class Quota(object):
 
 if __name__ == "__main__":
 
-    username = "root"
+    username = "username"
     # username = "papi"
-    password = "Password77"
-    baseUrl = "https://91.229.44.253:8080"
-    # baseUrl = "https://91.229.44.232:8080"
-    # baseUrl = "https://192.168.184.141:8080"
-    # baseUrl = "https://192.168.184.141:8080"
+    password = "password"
+    baseUrl = "IP:8080" # IP
     zone = "system"
     log_level = "debug"
     # papi_version = "16"
