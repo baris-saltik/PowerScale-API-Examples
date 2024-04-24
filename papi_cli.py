@@ -30,11 +30,8 @@ parser.add_argument("-l", "--log_level", action="store" , choices=["critical", "
 # Following should be enabled and the next parse_args([...]) should be commented out in production.
 # args = parser.parse_args()
 args = parser.parse_args(["--username", "root",
-                          "--password", "3",
-                          # "--password", "Password77",
-                          # "--baseUrl", "https://91.229.44.232:8080",
-                          # "--baseUrl", "https://91.229.44.253:8080",
-                          "--baseUrl", "https://192.168.184.141:8080",
+                          "--password", "password",
+                          "--baseUrl", "https://IP:8080",
                           "--zone", "system",
                           "--feature", "nfs",
                           "--action", "list",
