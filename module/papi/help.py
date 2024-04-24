@@ -95,10 +95,10 @@ class Help(object):
 
 if __name__ == "__main__":
 
-    username = "root"
-    password = "3"
-    # baseUrl = "https://91.229.44.253:8080" # onefs95
-    baseUrl = "https://192.168.184.141:8080" # icarus
+    username = "username"
+    password = "password"
+    # baseUrl = "https://IP:8080"
+    baseUrl = "https://IP:8080"
     apiVersion = None
 
     auth = Auth(username=username, password = password, baseUrl = baseUrl)
