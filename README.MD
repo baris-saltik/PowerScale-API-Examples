@@ -1,2 +1,2 @@
-* Ericsson PowerScale API PoC
+* PowerScale API PoC Examples
 
