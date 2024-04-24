@@ -1,2 +1,2 @@
-* PowerScale API PoC Examples
+* PowerScale API Examples
 
