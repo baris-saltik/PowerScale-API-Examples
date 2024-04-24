@@ -7,6 +7,3 @@ PyYAML==6.0.1
 requests==2.31.0
 text-unidecode==1.3
 urllib3==2.2.1
-
-
-I also noticed that you are using much more clients for random tests than you use for sequential tests. Is it because clients become bottleneck more quickly than our nodes in the case of random tests?
